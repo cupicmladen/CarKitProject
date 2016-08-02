@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarKitProject.UserControls.WeatherClockControl">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="20"/>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="5"/>
+      <ColumnDefinition/>
+      <ColumnDefinition Width="20"/>
+    </Grid.ColumnDefinitions>
+
+    <Image x:Name="Background" Grid.RowSpan="2" Grid.ColumnSpan="5" />
+    <Image x:Name="FirstClock" Grid.Column="1"/>
+    <Image x:Name="SecondClock" Grid.Column="3"/>
+
+    <Label Text="{Binding Day}" Margin="5" Grid.Column="1" VerticalOptions="Start" HorizontalOptions="Center" TextColor="Black"/>
+    <Label Text="{Binding Hour}" Grid.Column="1" FontSize="35" VerticalOptions="Center" HorizontalOptions="Center" TextColor="Black" FontAttributes="Bold"/>
+
+    <Image Source="{Binding WeatherImage}" Grid.Row="1" Grid.ColumnSpan="5" HorizontalOptions="Fill" VerticalOptions="Fill" Margin="-20,0,0,0"/>
+
+    <Label Text="{Binding Date}" Margin="5" Grid.Column="3" VerticalOptions="Start" HorizontalOptions="Center" TextColor="Black"/>
+    <Label Text="{Binding Minutes}" Grid.Column="3" FontSize="35" VerticalOptions="Center" HorizontalOptions="Center" TextColor="Black" FontAttributes="Bold"/>
+
+    <Label Text="{Binding Sunrise, StringFormat='{}{0:HH:mm}'}" TextColor="Black" FontSize="10" Grid.Column="1" Margin="8" VerticalOptions="End" HorizontalOptions="Center"/>
+    <Label Text="{Binding Sunset, StringFormat='{}{0:HH:mm}'}" TextColor="Black" FontSize="10" Grid.Column="3" Margin="8" VerticalOptions="End" HorizontalOptions="Center"/>
+
+    <StackLayout Grid.Row="1" Grid.ColumnSpan="3" VerticalOptions="Start" HorizontalOptions="Start" Spacing="0">
+      <Label Text="{Binding DisplayLocation}" Margin="5,0,0,0" TextColor="White"/>
+      <Label Text="{Binding WeatherDescription}" Margin="5,0,0,5" TextColor="White"/>
+    </StackLayout>
+
+    <Label Text="{Binding CurrentTemp, StringFormat='{}{0:F0}°'}" Grid.Row="1" Grid.Column="3" VerticalOptions="Start" HorizontalOptions="End" TextColor="White" FontSize="30"/>
+    <StackLayout Grid.Row="1" Grid.Column="4" VerticalOptions="Start" HorizontalOptions="Center" Spacing="0" Margin="0,8,0,0">
+      <Label Text="{Binding MaxTemp, StringFormat='{}{0:F0}°'}" TextColor="White" FontSize="10"/>
+      <Label Text="{Binding MinTemp, StringFormat='{}{0:F0}°'}" TextColor="White" FontSize="10"/>
+    </StackLayout>
+
+  </Grid>
+  </ContentView>

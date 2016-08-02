@@ -1,4 +1,5 @@
 ﻿using System;
+using CarKitProject.Helpers;
 using CarKitProject.Interfaces;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -17,8 +18,7 @@ namespace CarKitProject.Extensions
 				return null;
 			}
 
-			var imageLoader = DependencyService.Get<IImageLoader>();
-			var imageSource = imageLoader.LoadImageFromResources(Source);
+			var imageSource = ImageLoader.LoadImageFromResources(Source);
 			return imageSource;
 		}
 	}

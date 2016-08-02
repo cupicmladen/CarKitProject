@@ -2,10 +2,26 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:CarKitProject"
+             xmlns:maps="clr-namespace:Xamarin.Forms.Maps;assembly=Xamarin.Forms.Maps"
+             xmlns:userControls="clr-namespace:CarKitProject.UserControls;assembly=CarKitProject"
              x:Class="CarKitProject.MainPage">
+  <Grid >
+    <Grid.RowDefinitions>
+      <RowDefinition/>
+      <RowDefinition />
+    </Grid.RowDefinitions>
 
-  <Label Text="Welcome to Xamarin Forms!"
-           VerticalOptions="Center"
-           HorizontalOptions="Center" />
+    <Image x:Name="BackgroundImg" Grid.RowSpan="2"/>
 
+    <Grid>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <Label x:Name="label" Text="No errors" TextColor="White"/>
+      <userControls:WeatherClockControl Grid.Column="1"/>
+    </Grid>
+    <maps:Map x:Name="Map" Grid.Row="1" MapType="Hybrid" HasZoomEnabled="True" IsShowingUser="True"/>
+  </Grid>
 </ContentPage>

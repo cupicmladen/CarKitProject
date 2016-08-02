@@ -13,7 +13,7 @@ namespace CarKitProject
 		{
 			InitializeComponent();
 
-			MainPage = new CarKitProject.MainPage();
+			MainPage = new MainPage();
 		}
 
 		protected override void OnStart()
