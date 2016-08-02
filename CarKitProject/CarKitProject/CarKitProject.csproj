@@ -100,6 +100,17 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\weather_conditions\ClearSky800.png" />
+    <EmbeddedResource Include="Resources\weather_conditions\FewClouds801.png" />
+    <EmbeddedResource Include="Resources\weather_conditions\Na.png" />
+    <EmbeddedResource Include="Resources\weather_conditions\ScatteredClouds802.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\ClockRound.png" />
+    <EmbeddedResource Include="Resources\hexagons_texture_2560x1440.jpg" />
+    <EmbeddedResource Include="Resources\WeatherClockBackgroundRound.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.0.107\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.0.107\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

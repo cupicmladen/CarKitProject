@@ -7,13 +7,13 @@ namespace CarKitProject.Helpers
 	{
 		public static ImageSource LoadImageFromResources(WeatherCondition weatherCondition)
 		{
-			var resourceFullPath = "WeatherApp.Droid.Resources.weather_conditions." + weatherCondition + ".png";
+			var resourceFullPath = "CarKitProject.Resources.weather_conditions." + weatherCondition + ".png";
 			return ImageSource.FromResource(resourceFullPath);
 		}
 
 		public static ImageSource LoadImageFromResources(string resourceName)
 		{
-			var resourceFullPath = "WeatherApp.Droid.Resources.drawable." + resourceName;
+			var resourceFullPath = "CarKitProject.Resources." + resourceName;
 			return ImageSource.FromResource(resourceFullPath);
 		}
 	}
