@@ -202,7 +202,8 @@ namespace CarKitProject.ViewModels
 			if (Model == null)
 				Model = new WeatherModel();
 
-			var weatherRoot = await _weatherService.GetWeatherByCurrentLocation();
+			//var weatherRoot = await _weatherService.GetWeatherByCurrentLocation();
+			var weatherRoot = await _weatherService.GetWeatherByCityId(cityId);
 			CreateModel(weatherRoot);
 
 			DisplayLocation = Model.City + ", " + Model.Country.ToUpper();
@@ -221,16 +222,13 @@ namespace CarKitProject.ViewModels
 			Sunrise = weatherRoot.System.DisplaySunrise;
 			Sunset = weatherRoot.System.DisplaySunset;
 
-			//START Weather.First()
 			WeatherDescription = weatherRoot.Weather.First().Main;
-			//var weatherCondition = (WeatherCondition?)Enum.Parse(typeof (WeatherCondition), weatherRoot.Weather.First().Id.ToString());
 			var isDefined = Enum.IsDefined(typeof(WeatherCondition), weatherRoot.Weather.First().Id);
 			if (isDefined)
 				WeatherCondition = (WeatherCondition)weatherRoot.Weather.First().Id;
 
 			var imageSource = ImageLoader.LoadImageFromResources(WeatherCondition);
 			WeatherImage = imageSource;
-			//END Weather.First()
 		}
 
 		private bool TimerTickCallback()

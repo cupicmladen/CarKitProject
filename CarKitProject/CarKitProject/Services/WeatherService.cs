@@ -47,18 +47,18 @@ namespace CarKitProject.Services
 
 		public async Task<WeatherRoot> GetWeatherByCityId(string cityId)
 		{
-			using (var client = new HttpClient())
-			{
-				var url = string.Format(WeatherCityIdUri, cityId, "metric");
-				var json = await client.GetStringAsync(url);
+			//using (var client = new HttpClient())
+			//{
+			//	var url = string.Format(WeatherCityIdUri, cityId, "metric");
+			//	var json = await client.GetStringAsync(url);
 
-				if (string.IsNullOrWhiteSpace(json))
-					return null;
+			//	if (string.IsNullOrWhiteSpace(json))
+			//		return null;
 
-				return DeserializeObject<WeatherRoot>(json);
-			}
+			//	return DeserializeObject<WeatherRoot>(json);
+			//}
 
-			//return DeserializeObject<WeatherRoot>(BelgradeJson);
+			return DeserializeObject<WeatherRoot>(BelgradeJson);
 		}
 	}
 }

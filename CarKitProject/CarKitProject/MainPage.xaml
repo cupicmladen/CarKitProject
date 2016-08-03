@@ -20,7 +20,17 @@
         <ColumnDefinition/>
         <ColumnDefinition/>
       </Grid.ColumnDefinitions>
-      <Label x:Name="label" Text="No errors" TextColor="White"/>
+      <Grid Padding="10">
+        <Grid.RowDefinitions>
+          <RowDefinition/>
+          <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition/>
+          <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <userControls:IndicatorControl/>
+      </Grid>
       <userControls:WeatherClockControl Grid.Column="1"/>
     </Grid>
     <maps:Map x:Name="Map" Grid.Row="1" MapType="Hybrid" HasZoomEnabled="True" IsShowingUser="True"/>

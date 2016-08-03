@@ -27,7 +27,7 @@ namespace CarKitProject
 		private void CurrentLocationService_RaiseLocationChanged(LocationCoordinates location)
 		{
 			Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(Map.VisibleRegion.Radius.Kilometers)));
-			label.Text = "" + location.Latitude + Environment.NewLine + location.Longitude;
+			//label.Text = "" + location.Latitude + Environment.NewLine + location.Longitude;
 		}
 	}
 }

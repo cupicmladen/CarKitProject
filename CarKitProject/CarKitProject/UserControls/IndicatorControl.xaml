@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarKitProject.UserControls.IndicatorControl">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="3*"/>
+      <RowDefinition Height="1"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+    <Image x:Name="Background" Grid.RowSpan="3" Aspect="Fill"/>
+
+    <StackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="-8" Padding="-8">
+      <Label TextColor="Red" Text="{Binding Value}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="40" FontAttributes="Bold"/>
+      <Label TextColor="White" Text="{Binding Unit}" VerticalOptions="Center" HorizontalOptions="Center" FontSize="10"/>
+    </StackLayout>
+
+    <Frame BackgroundColor="#00d9ff" Grid.Row="1" Margin="5,0,5,0" HeightRequest="1"/>
+    <Label Grid.Row="2" TextColor="White" VerticalOptions="Start" HorizontalOptions="Center" Text="{Binding ValueDescription}" FontSize="10" Margin="-2"/>
+  </Grid>
+</ContentView>

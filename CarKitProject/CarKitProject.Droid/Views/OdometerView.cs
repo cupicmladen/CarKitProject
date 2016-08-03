@@ -44,7 +44,6 @@ namespace CarKitProject.Droid.Views
 			if (_screenOrientation == Orientation.Landscape)
 			{
 				_radius = (Height - 10) / 2;
-				//HandleStandardDraw(p => canvas.DrawCircle(_cx, _cy, _radius, p), ShapeView.StrokeColor, drawFill: false);
 				var rectF = GetLandscapeRectF();
 				HandleRadialDraw(p => canvas.DrawCircle(_cx, _cy, _radius, p), ShapeView.CenterColor);
 				HandleArcDraw(p => canvas.DrawArc(rectF, _odometerStartPosition, 270, false, p), ShapeView.StrokeColor, ShapeView.IndicatorStrokeWidth);
@@ -52,13 +51,6 @@ namespace CarKitProject.Droid.Views
 				HandleTextDraw(p => canvas.DrawText(ShapeView.Speed.ToString(), _cx, _cy - (p.Descent() + p.Ascent() / 2), p), ShapeView.SpeedColor, 300, 20);
 				HandleTextDraw(p => canvas.DrawText("km/h", _cx, _cy - (p.Descent() + p.Ascent() / 2) + 150, p), ShapeView.SpeedColor, 50);
 			}
-			//else
-			//{
-			//	_radius = Width/2;
-			//	HandleStandardDraw(p => canvas.DrawCircle(_cx, _cy, _radius, p), ShapeView.StrokeColor, drawFill: false);
-			//	var rectF = GetPortraitRectF();
-			//	HandleStandardDraw(p => canvas.DrawArc(rectF, _quarterTurnCounterClockwise, 270 * (ShapeView.Indicator / ShapeView.MaxValueIndicator), false, p), ShapeView.IndicatorStrokeColor, ShapeView.IndicatorStrokeWidth, false);
-			//}
 		}
 
 		private void HandleArcDraw(Action<Paint> drawShape, Xamarin.Forms.Color strokeColor, float lineWidth)

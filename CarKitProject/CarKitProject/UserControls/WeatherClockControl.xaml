@@ -19,12 +19,12 @@
     <Image x:Name="FirstClock" Grid.Column="1"/>
     <Image x:Name="SecondClock" Grid.Column="3"/>
 
-    <Label Text="{Binding Day}" Margin="5" Grid.Column="1" VerticalOptions="Start" HorizontalOptions="Center" TextColor="Black"/>
+    <Label Text="{Binding Day}" Margin="5" Grid.Column="1" VerticalOptions="Start" HorizontalOptions="Center" TextColor="Black" FontSize="12"/>
     <Label Text="{Binding Hour}" Grid.Column="1" FontSize="35" VerticalOptions="Center" HorizontalOptions="Center" TextColor="Black" FontAttributes="Bold"/>
 
     <Image Source="{Binding WeatherImage}" Grid.Row="1" Grid.ColumnSpan="5" HorizontalOptions="Fill" VerticalOptions="Fill" Margin="-20,0,0,0"/>
 
-    <Label Text="{Binding Date}" Margin="5" Grid.Column="3" VerticalOptions="Start" HorizontalOptions="Center" TextColor="Black"/>
+    <Label Text="{Binding Date}" Margin="5" Grid.Column="3" VerticalOptions="Start" HorizontalOptions="Center" TextColor="Black" FontSize="12"/>
     <Label Text="{Binding Minutes}" Grid.Column="3" FontSize="35" VerticalOptions="Center" HorizontalOptions="Center" TextColor="Black" FontAttributes="Bold"/>
 
     <Label Text="{Binding Sunrise, StringFormat='{}{0:HH:mm}'}" TextColor="Black" FontSize="10" Grid.Column="1" Margin="8" VerticalOptions="End" HorizontalOptions="Center"/>
