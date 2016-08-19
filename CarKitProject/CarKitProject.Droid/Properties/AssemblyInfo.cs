@@ -39,3 +39,5 @@ using Android.App;
 [assembly: UsesPermission(Manifest.Permission.AccessNetworkState)]
 [assembly: UsesPermission(Manifest.Permission.AccessWifiState)]
 [assembly: UsesPermission(Manifest.Permission.Internet)]
+[assembly: UsesPermission(Manifest.Permission.Bluetooth)]
+[assembly: UsesPermission(Manifest.Permission.BluetoothAdmin)]

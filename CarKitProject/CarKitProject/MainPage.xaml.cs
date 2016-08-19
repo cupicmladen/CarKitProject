@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CarKitProject.Interfaces;
 using CarKitProject.Models;
+using CarKitProject.OBD;
 using Xamarin.Forms;
 using Xamarin.Forms.Maps;
 
@@ -17,17 +18,19 @@ namespace CarKitProject
 		{
 			InitializeComponent();
 
-			var imageSource = ImageLoader.LoadImageFromResources("hexagons_texture_2560x1440.jpg");
-			BackgroundImg.Source = imageSource;
+			//var imageSource = ImageLoader.LoadImageFromResources("hexagons_texture_2560x1440.jpg");
+			//BackgroundImg.Source = imageSource;
 
-			var currentLocationService = DependencyService.Get<ICurrentLocationService>();
-			currentLocationService.RaiseLocationChanged += CurrentLocationService_RaiseLocationChanged;
+			//var currentLocationService = DependencyService.Get<ICurrentLocationService>();
+			//currentLocationService.RaiseLocationChanged += CurrentLocationService_RaiseLocationChanged;
+
+			var btConnectionManager = DependencyService.Get<IBtConnectionManager>();
+			btConnectionManager.ConnectToOdb();
 		}
 
-		private void CurrentLocationService_RaiseLocationChanged(LocationCoordinates location)
-		{
-			Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(Map.VisibleRegion.Radius.Kilometers)));
-			//label.Text = "" + location.Latitude + Environment.NewLine + location.Longitude;
-		}
+		//private void CurrentLocationService_RaiseLocationChanged(LocationCoordinates location)
+		//{
+		//	Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(Map.VisibleRegion.Radius.Kilometers)));
+		//}
 	}
 }

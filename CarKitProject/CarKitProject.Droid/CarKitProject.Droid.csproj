@@ -132,6 +132,7 @@
     <Compile Include="Implementation\CurrentLocationService.cs" />
     <Compile Include="Implementation\GpsLocationListener.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="OBD\BtConnectionManager.cs" />
     <Compile Include="Renderer\OdometerRenderer.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

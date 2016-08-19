@@ -6,7 +6,7 @@
              x:Class="CarKitProject.MainPage"
              BackgroundColor="Black" 
              Padding="10">
-  <Grid >
+  <!--<Grid >
     <Grid.RowDefinitions>
       <RowDefinition/>
       <RowDefinition />
@@ -34,5 +34,10 @@
       <userControls:WeatherClockControl Grid.Column="1"/>
     </Grid>
     <maps:Map x:Name="Map" Grid.Row="1" MapType="Hybrid" HasZoomEnabled="True" IsShowingUser="True"/>
-  </Grid>
+  </Grid>-->
+
+<Grid>
+  
+</Grid>
+
 </ContentPage>
