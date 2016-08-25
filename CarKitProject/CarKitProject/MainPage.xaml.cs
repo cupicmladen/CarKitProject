@@ -23,9 +23,6 @@ namespace CarKitProject
 
 			//var currentLocationService = DependencyService.Get<ICurrentLocationService>();
 			//currentLocationService.RaiseLocationChanged += CurrentLocationService_RaiseLocationChanged;
-
-			var btConnectionManager = DependencyService.Get<IBtConnectionManager>();
-			btConnectionManager.ConnectToOdb();
 		}
 
 		//private void CurrentLocationService_RaiseLocationChanged(LocationCoordinates location)

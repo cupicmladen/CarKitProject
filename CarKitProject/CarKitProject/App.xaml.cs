@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using CarKitProject.OBD;
 using Xamarin.Forms;
 
 namespace CarKitProject
@@ -13,7 +13,8 @@ namespace CarKitProject
 		{
 			InitializeComponent();
 
-			MainPage = new MainPage();
+			//MainPage = new MainPage();
+			MainPage = new TestObdPage();
 		}
 
 		protected override void OnStart()

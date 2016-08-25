@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarKitProject.OBD.TestObdPage">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <StackLayout Orientation="Horizontal">
+      <Button x:Name="Ati" Text="ati" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+      <Button x:Name="Atl1" Text="atl1" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+      <Button x:Name="Ath1" Text="ath1" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+      <Button x:Name="Ats1" Text="ats1" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+      <Button x:Name="Atal" Text="atal" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+      <Button x:Name="Atsp0" Text="atsp0" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+    </StackLayout>
+    <StackLayout Orientation="Horizontal" Grid.Row="1">
+      <Entry x:Name="CustomCommandEntry" WidthRequest="200"/>
+      <Button x:Name="CustomSendButton" Text="Send" Clicked="ButtonCustom_OnClicked"/>
+      <Switch IsToggled="False" x:Name="Switch" Toggled="Switch_OnToggled"/>
+    </StackLayout>
+    <Editor Grid.Row="2" IsEnabled="False" x:Name="Editor" />
+    <Grid Grid.Row="3">
+      <Button x:Name="Rpm" Text="RPM" Clicked="Rpm_OnClicked" FontSize="10" HorizontalOptions="Start"/>
+      <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+        <Button x:Name="Connect" Text="Connect" Clicked="Connect_OnClicked" />
+        <Button x:Name="StartMonitoring" Text="Start" Clicked="StartMonitoring_OnClicked" />
+        <Button x:Name="StopReadingData" Text="Stop" Clicked="StopReadingData_OnClicked" />
+      </StackLayout>
+    </Grid>
+  </Grid>
+</ContentPage>
