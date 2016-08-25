@@ -24,11 +24,13 @@
     </StackLayout>
     <Editor Grid.Row="2" IsEnabled="False" x:Name="Editor" />
     <Grid Grid.Row="3">
-      <Button x:Name="Rpm" Text="RPM" Clicked="Rpm_OnClicked" FontSize="10" HorizontalOptions="Start"/>
+      <Button x:Name="Rpm" Text="RPM" Clicked="Rpm_OnClicked" FontSize="10" WidthRequest="50" HorizontalOptions="Start"/>
       <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-        <Button x:Name="Connect" Text="Connect" Clicked="Connect_OnClicked" />
-        <Button x:Name="StartMonitoring" Text="Start" Clicked="StartMonitoring_OnClicked" />
-        <Button x:Name="StopReadingData" Text="Stop" Clicked="StopReadingData_OnClicked" />
+        <Button x:Name="Connect" Text="Con" Clicked="Connect_OnClicked" FontSize="10" WidthRequest="50"/>
+        <Button x:Name="StartMonitoring" Text="Mon" Clicked="StartMonitoring_OnClicked" FontSize="10" WidthRequest="50"/>
+        <Button x:Name="Log" Text="Log" Clicked="Log_OnClicked" FontSize="10" WidthRequest="50"/>
+        <Button x:Name="Clear" Text="Clear" Clicked="Clear_OnClicked" FontSize="10" WidthRequest="60"/>
+        <Button x:Name="Stop" Text="Stop" Clicked="Stop_OnClicked" FontSize="10" WidthRequest="60"/>
       </StackLayout>
     </Grid>
   </Grid>

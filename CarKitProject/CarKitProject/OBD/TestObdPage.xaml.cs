@@ -8,6 +8,8 @@ namespace CarKitProject.OBD
 		public TestObdPage()
 		{
 			InitializeComponent();
+			_btManager = DependencyService.Get<IBtConnectionManager>();
+			_btManager.DataReceived += BtDataReceived;
 		}
 
 		private void Connect_OnClicked(object sender, EventArgs e)
@@ -40,9 +42,9 @@ namespace CarKitProject.OBD
 		private void Button_OnClicked(object sender, EventArgs e)
 		{
 			Editor.Text += NewLine();
-			var text = ">";
+			var text = string.Empty;
 			var command = (sender as Button).Text;
-			text += command + Environment.NewLine;
+			text += "---------- " + command + " ----------" + Environment.NewLine;
 
 			if (_appendNewLine)
 				command += "\r"; //command += "\r\n"; alternative
@@ -55,18 +57,49 @@ namespace CarKitProject.OBD
 		private void ButtonCustom_OnClicked(object sender, EventArgs e)
 		{
 			Editor.Text += NewLine();
-			var text = ">";
+			var text = string.Empty;
 			var command = CustomCommandEntry.Text;
-			text += command + NewLine();
+			text += "---------- " + command + " ----------" + Environment.NewLine;
 
 			if (_appendNewLine)
-				command += "\r\n";
+				command += "\r";
 
 			Editor.Text += text;
 			CustomCommandEntry.Text = "";
 
 			_btManager.SendCommand(command);
 		}
+
+		//private void Button_OnClicked(object sender, EventArgs e)
+		//{
+		//	Editor.Text += NewLine();
+		//	var text = ">";
+		//	var command = (sender as Button).Text;
+		//	text += command + Environment.NewLine;
+
+		//	if (_appendNewLine)
+		//		command += "\r"; //command += "\r\n"; alternative
+
+		//	Editor.Text += text;
+
+		//	_btManager.SendCommand(command);
+		//}
+
+		//private void ButtonCustom_OnClicked(object sender, EventArgs e)
+		//{
+		//	Editor.Text += NewLine();
+		//	var text = ">";
+		//	var command = CustomCommandEntry.Text;
+		//	text += command + NewLine();
+
+		//	if (_appendNewLine)
+		//		command += "\r";
+
+		//	Editor.Text += text;
+		//	CustomCommandEntry.Text = "";
+
+		//	_btManager.SendCommand(command);
+		//}
 
 		private void Rpm_OnClicked(object sender, EventArgs e)
 		{
@@ -76,7 +109,7 @@ namespace CarKitProject.OBD
 			text += command + NewLine();
 
 			if (_appendNewLine)
-				command += "\r\n";
+				command += "\r";
 
 			Editor.Text += text;
 
@@ -88,16 +121,27 @@ namespace CarKitProject.OBD
 			_appendNewLine = e.Value;
 		}
 
-		private void StopReadingData_OnClicked(object sender, EventArgs e)
+		private void Log_OnClicked(object sender, EventArgs e)
 		{
-			_btManager.StopReadingData();
-
 			var fileService = DependencyService.Get<IFileService>();
 			var dateTime = DateTime.Now.ToString("f");
 			var textToSave = Environment.NewLine + "-----" + dateTime + "-----" + Environment.NewLine;
 			textToSave += Editor.Text;
-			fileService.SaveToLog(textToSave);
+			fileService.SaveToSdCard(textToSave, "log_" + _counter);
+			_counter++;
+			Editor.Text = string.Empty;
 		}
+
+		private void Clear_OnClicked(object sender, EventArgs e)
+		{
+			Editor.Text = string.Empty;
+		}
+
+		private void Stop_OnClicked(object sender, EventArgs e)
+		{
+			_btManager.StopReadingData();
+		}
+
 
 		private string NewLine()
 		{
@@ -106,5 +150,6 @@ namespace CarKitProject.OBD
 
 		private IBtConnectionManager _btManager;
 		private bool _appendNewLine;
+		private int _counter = 1;
 	}
 }

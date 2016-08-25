@@ -38,7 +38,7 @@ namespace CarKitProject.Droid.OBD
 			return _socket.IsConnected;
 		}
 		
-		// uneused method (leave it for now)
+		// unused method (leave it for now)
 		private bool TryConnectOld()
 		{
 			var btAdapter = BluetoothAdapter.DefaultAdapter;
@@ -63,23 +63,43 @@ namespace CarKitProject.Droid.OBD
 
 		public void SendCommand(string command)
 		{
-			var array = Encoding.ASCII.GetBytes(command);
-			_socket.OutputStream.Write(array, 0, array.Length);
+			//var array = Encoding.ASCII.GetBytes(command);
+			//_socket.OutputStream.Write(array, 0, array.Length);
+
+			DataReceived?.Invoke("Response");
 		}
+
 
 		public void StartReadingData()
 		{
 			Task.Factory.StartNew(() =>
 			{
+				var buffer = new byte[1024];
 				_readingData = true;
 				while (_readingData)
 				{
-					var value = ReadData();
+					var count = _socket.InputStream.Read(buffer, 0, buffer.Length);
+					var value = Encoding.ASCII.GetString(buffer, 0, count);
+
 					if(!string.IsNullOrEmpty(value))
 						DataReceived?.Invoke(value);
 				}
 			});
 		}
+
+		//public void StartReadingData()
+		//{
+		//	Task.Factory.StartNew(() =>
+		//	{
+		//		_readingData = true;
+		//		while (_readingData)
+		//		{
+		//			var value = ReadData();
+		//			if(!string.IsNullOrEmpty(value))
+		//				DataReceived?.Invoke(value);
+		//		}
+		//	});
+		//}
 
 		private string ReadData()
 		{

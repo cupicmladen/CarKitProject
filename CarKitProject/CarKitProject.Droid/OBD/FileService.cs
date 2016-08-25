@@ -28,5 +28,17 @@ namespace CarKitProject.Droid.OBD
 			var filePath = Path.Combine(documentsPath, "ObdLogFile.txt");
 			File.AppendAllText(filePath, logText);
 		}
+
+		public void SaveToSdCard(string logText, string fileName)
+		{
+			var externalStoragePath = Android.OS.Environment.ExternalStorageDirectory.Path;
+			var directoryname = Path.Combine(externalStoragePath, "CarKitAppCashe");
+			var exists = Directory.Exists(directoryname);
+			if (!exists)
+				Directory.CreateDirectory(directoryname);
+
+			var filePath = Path.Combine(directoryname, fileName + ".txt");
+			File.WriteAllText(filePath, logText);
+		}
 	}
 }

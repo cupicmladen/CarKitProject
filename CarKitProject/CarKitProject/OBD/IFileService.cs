@@ -5,5 +5,6 @@
 		string LoadFromLog();
 		void DeleteLog();
 		void SaveToLog(string logText);
+		void SaveToSdCard(string logText, string fileName);
 	}
 }
