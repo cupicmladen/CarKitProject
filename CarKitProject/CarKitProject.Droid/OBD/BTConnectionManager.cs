@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Bluetooth;
@@ -16,6 +17,12 @@ namespace CarKitProject.Droid.OBD
 {
 	public class BtConnectionManager : IBtConnectionManager
 	{
+		public BtConnectionManager()
+		{
+			_ts = new CancellationTokenSource();
+			_ct = _ts.Token;
+		}
+
 		public bool ConnectToObd()
 		{
 			return TryConnect();
@@ -63,43 +70,40 @@ namespace CarKitProject.Droid.OBD
 
 		public void SendCommand(string command)
 		{
-			//var array = Encoding.ASCII.GetBytes(command);
-			//_socket.OutputStream.Write(array, 0, array.Length);
-
-			DataReceived?.Invoke("Response");
-		}
-
-
-		public void StartReadingData()
-		{
-			Task.Factory.StartNew(() =>
-			{
-				var buffer = new byte[1024];
-				_readingData = true;
-				while (_readingData)
-				{
-					var count = _socket.InputStream.Read(buffer, 0, buffer.Length);
-					var value = Encoding.ASCII.GetString(buffer, 0, count);
-
-					if(!string.IsNullOrEmpty(value))
-						DataReceived?.Invoke(value);
-				}
-			});
+			var array = Encoding.ASCII.GetBytes(command);
+			_socket.OutputStream.Write(array, 0, array.Length);
 		}
 
 		//public void StartReadingData()
 		//{
 		//	Task.Factory.StartNew(() =>
 		//	{
+		//		var buffer = new byte[1024];
 		//		_readingData = true;
 		//		while (_readingData)
 		//		{
-		//			var value = ReadData();
+		//			var count = _socket.InputStream.Read(buffer, 0, buffer.Length);
+		//			var value = Encoding.ASCII.GetString(buffer, 0, count);
+
 		//			if(!string.IsNullOrEmpty(value))
 		//				DataReceived?.Invoke(value);
 		//		}
 		//	});
 		//}
+
+		public void StartReadingData()
+		{
+			Task.Factory.StartNew(() =>
+			{
+				_readingData = true;
+				while (_readingData)
+				{
+					var value = ReadData();
+					if (!string.IsNullOrEmpty(value))
+						DataReceived?.Invoke(value);
+				}
+			}, _ct);
+		}
 
 		private string ReadData()
 		{
@@ -110,22 +114,35 @@ namespace CarKitProject.Droid.OBD
 			while (cont)
 			{
 				count = _socket.InputStream.Read(buffer, 0, buffer.Length);
-				value = Encoding.ASCII.GetString(buffer, 0, count);
+				value += Encoding.ASCII.GetString(buffer, 0, count);
 				if (value.Contains(">"))
 					cont = false;
 			}
 
-			return value.Replace("\n", "");
+			if(_useLineFormat)
+				return value.Replace("\n", "");
+
+			return value;
 		}
 
 		public void StopReadingData()
 		{
 			_readingData = false;
+			_ts.Cancel();
+			_socket.Close();
+		}
+
+		private bool _useLineFormat;
+		public void UseLineFormat(bool useLineFormat)
+		{
+			_useLineFormat = useLineFormat;
 		}
 
 		public event Action<string> DataReceived;
 
 		private BluetoothSocket _socket;
 		private bool _readingData;
+		private CancellationTokenSource _ts;
+		CancellationToken _ct;
 	}
 }

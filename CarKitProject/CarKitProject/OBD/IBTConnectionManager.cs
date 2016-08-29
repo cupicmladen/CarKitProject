@@ -9,5 +9,6 @@ namespace CarKitProject.OBD
 		void StartReadingData();
 		void StopReadingData();
 		event Action<string> DataReceived;
+		void UseLineFormat(bool useLineFormat);
 	}
 }

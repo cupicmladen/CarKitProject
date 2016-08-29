@@ -2,6 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="CarKitProject.Droid">
 	<uses-sdk android:minSdkVersion="15" />
 	<application android:label="CarKitProject">
-    <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDmAluWbyDcefPvT416tPUr4POLVzEWT88" />
-  </application>
+		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyDmAluWbyDcefPvT416tPUr4POLVzEWT88" />
+	</application>
 </manifest>
