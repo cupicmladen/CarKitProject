@@ -70,6 +70,7 @@
     <Compile Include="UserControls\WeatherClockControl.xaml.cs">
       <DependentUpon>WeatherClockControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\PidsViewModel.cs" />
     <Compile Include="ViewModels\WeatherClockViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

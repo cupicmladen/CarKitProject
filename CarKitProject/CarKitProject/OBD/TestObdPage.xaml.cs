@@ -14,11 +14,11 @@ namespace CarKitProject.OBD
 		{
 			Editor.Text = "Conecting..." + NewLine();
 			_btManager = DependencyService.Get<IBtConnectionManager>();
-			var isConnected = _btManager.ConnectToObd();
+			_btManager.ConnectToObd();
 
-			Editor.Text += "" + isConnected + NewLine();
+			Editor.Text += "" + _btManager.IsConnected + NewLine();
 
-			if (_btManager == null || !isConnected)
+			if (_btManager == null || !_btManager.IsConnected)
 				return;
 
 			_btManager.DataReceived += BtDataReceived;

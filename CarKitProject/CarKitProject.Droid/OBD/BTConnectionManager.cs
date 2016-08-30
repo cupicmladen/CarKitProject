@@ -23,17 +23,19 @@ namespace CarKitProject.Droid.OBD
 			_ct = _ts.Token;
 		}
 
-		public bool ConnectToObd()
+		public void ConnectToObd()
 		{
-			return TryConnect();
+			TryConnect();
 		}
 
-		private bool TryConnect()
+		public bool IsConnected => _socket?.IsConnected ?? false;
+
+		private void TryConnect()
 		{
 			var btAdapter = BluetoothAdapter.DefaultAdapter;
 
 			if (!btAdapter.IsEnabled)
-				return false;
+				return;
 
 			var device = btAdapter.BondedDevices.FirstOrDefault(it => it.Name.Contains("OBD"));
 
@@ -41,8 +43,6 @@ namespace CarKitProject.Droid.OBD
 			var socketTmp = JNIEnv.CallObjectMethod(device.Handle, createRfcommSocket, new Android.Runtime.JValue(1));
 			_socket = Java.Lang.Object.GetObject<BluetoothSocket>(socketTmp, JniHandleOwnership.TransferLocalRef);
 			_socket.Connect();
-
-			return _socket.IsConnected;
 		}
 		
 		// unused method (leave it for now)

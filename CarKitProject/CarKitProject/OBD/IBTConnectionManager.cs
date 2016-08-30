@@ -4,7 +4,8 @@ namespace CarKitProject.OBD
 {
 	public interface IBtConnectionManager
 	{
-		bool ConnectToObd();
+		void ConnectToObd();
+		bool IsConnected { get; }
 		void SendCommand(string command);
 		void StartReadingData();
 		void StopReadingData();
