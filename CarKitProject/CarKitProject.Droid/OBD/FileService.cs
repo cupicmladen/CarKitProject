@@ -38,7 +38,7 @@ namespace CarKitProject.Droid.OBD
 				Directory.CreateDirectory(directoryname);
 
 			var filePath = Path.Combine(directoryname, fileName + ".txt");
-			File.WriteAllText(filePath, logText);
+			File.AppendAllText(filePath, logText);
 		}
 	}
 }

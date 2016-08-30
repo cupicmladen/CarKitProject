@@ -13,23 +13,14 @@
     </Grid.RowDefinitions>
     <StackLayout Orientation="Horizontal">
       <Button x:Name="Ati" Text="ati" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
-      <Button x:Name="Atl1" Text="atl1" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
-      <Button x:Name="Ath1" Text="ath1" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
-      <Button x:Name="Ats1" Text="ats1" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
-      <Button x:Name="Atal" Text="atal" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+      <Button x:Name="Atl0" Text="atl0" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
+      <Button x:Name="Ath0" Text="ath0" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
       <Button x:Name="Atsp6" Text="atsp6" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
     </StackLayout>
     <StackLayout Orientation="Horizontal" Grid.Row="1">
-      <Entry x:Name="CustomCommandEntry" Text="01 04 05 0B 0C" WidthRequest="150"/>
+      <Entry x:Name="CustomCommandEntry" WidthRequest="150"/>
       <Button x:Name="CustomSendButton" Text="Send" Clicked="ButtonCustom_OnClicked"/>
-      <Switch IsToggled="False" x:Name="Switch" Toggled="Switch_OnToggled"/>
-      <Switch IsToggled="False" x:Name="Switch1" Toggled="Switch1_OnToggled"/>
     </StackLayout>
-    <StackLayout Orientation="Horizontal" Grid.Row="2">
-      <Entry x:Name="CustomCommandEntry1" Text="ATDP" WidthRequest="150"/>
-      <Button Text="Send" Clicked="ButtonCustom1_OnClicked"/>
-    </StackLayout>
-    <Entry x:Name="FileTitle" Text="1 Init" WidthRequest="150" Grid.Row="3"/>
     <Editor Grid.Row="4" IsEnabled="False" x:Name="Editor" />
     <Grid Grid.Row="5">
       <Button x:Name="Rpm" Text="RPM" Clicked="Rpm_OnClicked" FontSize="10" WidthRequest="50" HorizontalOptions="Start"/>
@@ -38,7 +29,6 @@
         <Button x:Name="Log" Text="Log" Clicked="Log_OnClicked" FontSize="10" WidthRequest="50"/>
         <Button x:Name="Clear" Text="Clear" Clicked="Clear_OnClicked" FontSize="10" WidthRequest="60"/>
         <Button x:Name="Stop" Text="Stop" Clicked="Stop_OnClicked" FontSize="10" WidthRequest="60"/>
-        <Button x:Name="Hint" Text="Hint" Clicked="Hint_OnClicked" FontSize="10" WidthRequest="60"/>
       </StackLayout>
     </Grid>
   </Grid>

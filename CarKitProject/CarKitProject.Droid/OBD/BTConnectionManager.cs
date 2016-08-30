@@ -74,23 +74,6 @@ namespace CarKitProject.Droid.OBD
 			_socket.OutputStream.Write(array, 0, array.Length);
 		}
 
-		//public void StartReadingData()
-		//{
-		//	Task.Factory.StartNew(() =>
-		//	{
-		//		var buffer = new byte[1024];
-		//		_readingData = true;
-		//		while (_readingData)
-		//		{
-		//			var count = _socket.InputStream.Read(buffer, 0, buffer.Length);
-		//			var value = Encoding.ASCII.GetString(buffer, 0, count);
-
-		//			if(!string.IsNullOrEmpty(value))
-		//				DataReceived?.Invoke(value);
-		//		}
-		//	});
-		//}
-
 		public void StartReadingData()
 		{
 			Task.Factory.StartNew(() =>
@@ -119,9 +102,6 @@ namespace CarKitProject.Droid.OBD
 					cont = false;
 			}
 
-			if(_useLineFormat)
-				return value.Replace("\n", "");
-
 			return value;
 		}
 
@@ -130,12 +110,6 @@ namespace CarKitProject.Droid.OBD
 			_readingData = false;
 			_ts.Cancel();
 			_socket.Close();
-		}
-
-		private bool _useLineFormat;
-		public void UseLineFormat(bool useLineFormat)
-		{
-			_useLineFormat = useLineFormat;
 		}
 
 		public event Action<string> DataReceived;
