@@ -16,6 +16,20 @@ namespace CarKitProject.OBD.Commands
 			set { _response = value; }
 		}
 
+		public string Value
+		{
+			get { return _value; }
+			set { _value = value; }
+		}
+
+		public string Unit
+		{
+			get { return _unit; }
+			set { _unit = value; }
+		}
+
+		public string FormattedCommand => Command + "\r";
+
 		public virtual void FormatResult(string hexValue)
 		{
 			throw new NotImplementedException();
@@ -23,5 +37,7 @@ namespace CarKitProject.OBD.Commands
 
 		private string _command;
 		private string _response;
+		private string _value;
+		private string _unit;
 	}
 }

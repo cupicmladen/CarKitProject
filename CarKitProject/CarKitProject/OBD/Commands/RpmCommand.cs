@@ -9,12 +9,6 @@ namespace CarKitProject.OBD.Commands
 			Command = "010C";
 		}
 
-		public int Value
-		{
-			get { return _value; }
-			set { _value = value; }
-		}
-
 		public override void FormatResult(string hexValue)
 		{
 			var result = Convert.ToInt64(hexValue, 16);

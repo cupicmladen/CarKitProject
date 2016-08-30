@@ -2,17 +2,11 @@
 
 namespace CarKitProject.OBD.Commands
 {
-	public class CoolantTemperature : ObdCommand
+	public class CoolantTemperatureCommand : ObdCommand
 	{
-		public CoolantTemperature()
+		public CoolantTemperatureCommand()
 		{
 			Command = "0105";
-		}
-
-		public int Value
-		{
-			get { return _value; }
-			set { _value = value; }
 		}
 
 		public override void FormatResult(string hexValue)
