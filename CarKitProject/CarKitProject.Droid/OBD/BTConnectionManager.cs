@@ -102,7 +102,7 @@ namespace CarKitProject.Droid.OBD
 					cont = false;
 			}
 
-			return value;
+			return value.Replace("\r", string.Empty);
 		}
 
 		public void StopReadingData()

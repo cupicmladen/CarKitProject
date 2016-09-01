@@ -28,6 +28,12 @@ namespace CarKitProject.OBD.Commands
 			set { _unit = value; }
 		}
 
+		public int BytesReturned
+		{
+			get { return _bytesReturned; }
+			set { _bytesReturned = value; }
+		}
+
 		public string FormattedCommand => Command + "\r";
 
 		public virtual void FormatResult(string hexValue)
@@ -39,5 +45,6 @@ namespace CarKitProject.OBD.Commands
 		private string _response;
 		private string _value;
 		private string _unit;
+		private int _bytesReturned;
 	}
 }

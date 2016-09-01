@@ -1,4 +1,5 @@
 ﻿using System;
+using CarKitProject.ViewModels;
 using Xamarin.Forms;
 
 namespace CarKitProject.OBD
@@ -8,72 +9,54 @@ namespace CarKitProject.OBD
 		public TestObdPage()
 		{
 			InitializeComponent();
+			_viewModel = new PidsViewModel();
+			BindingContext = _viewModel;
 		}
 
 		private void Connect_OnClicked(object sender, EventArgs e)
 		{
-			Editor.Text = "Conecting..." + NewLine();
-			_btManager = DependencyService.Get<IBtConnectionManager>();
-			_btManager.ConnectToObd();
+			_viewModel.TempResponseList = "Conecting..." + NewLine();
+			var isConnected = _viewModel.ConnectToObd();
 
-			Editor.Text += "" + _btManager.IsConnected + NewLine();
-
-			if (_btManager == null || !_btManager.IsConnected)
-				return;
-
-			_btManager.DataReceived += BtDataReceived;
-			_btManager.StartReadingData();
-		}
-
-		private void BtDataReceived(string obj)
-		{
-			Device.BeginInvokeOnMainThread(() =>
-			{
-				Editor.Text += obj + NewLine();
-			});
-
+			_viewModel.TempResponseList += "" + isConnected + NewLine();
 		}
 
 		private void Button_OnClicked(object sender, EventArgs e)
 		{
-			Editor.Text += NewLine();
+			_viewModel.TempResponseList += NewLine();
 			var text = string.Empty;
 			var command = (sender as Button).Text;
-			text += "---------- " + command + " ----------" + Environment.NewLine;
+			_viewModel.TempResponseList += "---------- " + command + " ----------" + Environment.NewLine;
 
 			command += "\r";
 
-			Editor.Text += text;
+			_viewModel.TempResponseList += text;
 
-			_btManager.SendCommand(command);
+			_viewModel.SendCommand(command);
 		}
 
 		private void ButtonCustom_OnClicked(object sender, EventArgs e)
 		{
-			Editor.Text += NewLine();
+			_viewModel.TempResponseList += NewLine();
 			var text = string.Empty;
-			var command = CustomCommandEntry.Text;
-			text += "---------- " + command + " ----------" + Environment.NewLine;
+			var command = CustomCommandText.Text;
+			_viewModel.TempResponseList += "---------- " + command + " ----------" + Environment.NewLine;
 
 			command += "\r";
 
-			Editor.Text += text;
+			_viewModel.TempResponseList += text;
 
-			_btManager.SendCommand(command);
+			_viewModel.SendCommand(command);
 		}
 
-		private void Rpm_OnClicked(object sender, EventArgs e)
+		private void StartCommunicationg_OnClicked(object sender, EventArgs e)
 		{
-			Editor.Text += NewLine();
-			var text = string.Empty;
-			var command = "010C";
-			text += "---------- " + command + " ----------" + Environment.NewLine;
+			_viewModel.LoadData();
+		}
 
-			command += "\r";
-
-			Editor.Text += text;
-
-			_btManager.SendCommand(command);
+		private void StopCommunicationg_OnClicked(object sender, EventArgs e)
+		{
+			_viewModel.StopReadingData();
 		}
 
 		private void Log_OnClicked(object sender, EventArgs e)
@@ -81,19 +64,9 @@ namespace CarKitProject.OBD
 			var fileService = DependencyService.Get<IFileService>();
 			var dateTime = DateTime.Now.ToString("f");
 			var textToSave = Environment.NewLine + "-----" + dateTime + "-----" + Environment.NewLine;
-			textToSave += Editor.Text;
+			textToSave += _viewModel.TempResponseList;
 			fileService.SaveToSdCard(textToSave, "log");
-			Editor.Text = string.Empty;
-		}
-
-		private void Clear_OnClicked(object sender, EventArgs e)
-		{
-			Editor.Text = string.Empty;
-		}
-
-		private void Stop_OnClicked(object sender, EventArgs e)
-		{
-			_btManager.StopReadingData();
+			_viewModel.TempResponseList = string.Empty;
 		}
 
 		private string NewLine()
@@ -101,6 +74,11 @@ namespace CarKitProject.OBD
 			return Environment.NewLine;
 		}
 
-		private IBtConnectionManager _btManager;
+		private void Switch_OnToggled(object sender, ToggledEventArgs e)
+		{
+			_viewModel.UseOneResponse(e.Value);
+		}
+
+		private PidsViewModel _viewModel;
 	}
 }

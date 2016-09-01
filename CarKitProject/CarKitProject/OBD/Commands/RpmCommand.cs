@@ -7,6 +7,7 @@ namespace CarKitProject.OBD.Commands
 		public RpmCommand()
 		{
 			Command = "010C";
+			BytesReturned = 2;
 		}
 
 		public override void FormatResult(string hexValue)

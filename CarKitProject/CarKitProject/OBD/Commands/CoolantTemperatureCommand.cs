@@ -7,6 +7,7 @@ namespace CarKitProject.OBD.Commands
 		public CoolantTemperatureCommand()
 		{
 			Command = "0105";
+			BytesReturned = 1;
 		}
 
 		public override void FormatResult(string hexValue)

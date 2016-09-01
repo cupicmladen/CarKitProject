@@ -7,6 +7,7 @@ namespace CarKitProject.OBD.Commands
 		public SpeedCommand()
 		{
 			Command = "010D";
+			BytesReturned = 1;
 		}
 
 		public override void FormatResult(string hexValue)

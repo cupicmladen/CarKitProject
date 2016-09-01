@@ -1,49 +1,88 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using CarKitProject.Annotations;
 using CarKitProject.OBD;
 using CarKitProject.OBD.Commands;
 using Xamarin.Forms;
 
 namespace CarKitProject.ViewModels
 {
-	public class PidsViewModel
+	public class PidsViewModel : INotifyPropertyChanged
 	{
 		public PidsViewModel()
 		{
-			_cancellationTokenSource = new CancellationTokenSource();
+			
+			TempResponseList = string.Empty;
+
+			RpmCommand = new RpmCommand();
+			SpeedCommand = new SpeedCommand();
+			CoolantTemperatureCommand = new CoolantTemperatureCommand();
 		}
 
-		private void ConnectToObd()
+		public bool ConnectToObd()
 		{
 			_btManager = DependencyService.Get<IBtConnectionManager>();
 			_btManager.ConnectToObd();
 
 			if (_btManager == null || !_btManager.IsConnected)
-				return;
+				return false;
 
 			_btManager.DataReceived += BtDataReceived;
 			_btManager.StartReadingData();
 
-			LoadData();
+			return _btManager.IsConnected;
 		}
 
 		private void BtDataReceived(string command)
 		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
+				TempResponseList += command.Length + ": " + command + Environment.NewLine;
 			});
 		}
 
-		private void LoadData()
+		public void SendCommand(string command)
 		{
+			_btManager.SendCommand(command);
+		}
+
+		public void LoadData()
+		{
+			if(_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+				_cancellationTokenSource = new CancellationTokenSource();
+
 			Task.Factory.StartNew((o) =>
 			{
 				while (!_cancellationTokenSource.IsCancellationRequested)
 				{
-					_btManager.SendCommand(RpmCommand.FormattedCommand);
+					if (_useOneResponse)
+					{
+						_btManager.SendCommand(RpmCommand.Command + " 1\r");
+						_btManager.SendCommand(SpeedCommand.Command + " 1\r");
+						_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
+					}
+					else
+					{
+						_btManager.SendCommand(RpmCommand.FormattedCommand);
+						_btManager.SendCommand(SpeedCommand.FormattedCommand);
+						_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+					}
 				}
 			}, TaskCreationOptions.LongRunning, _cancellationTokenSource.Token);
+		}
+
+		public void StopReadingData()
+		{
+			_cancellationTokenSource.Cancel();
+		}
+
+		public void UseOneResponse(bool value)
+		{
+			_useOneResponse = value;
 		}
 
 		#region ObdCommands
@@ -54,11 +93,50 @@ namespace CarKitProject.ViewModels
 			set { _rpmCommand = value; }
 		}
 
+		public SpeedCommand SpeedCommand
+		{
+			get { return _speedCommand; }
+			set { _speedCommand = value; }
+		}
+
+		public CoolantTemperatureCommand CoolantTemperatureCommand
+		{
+			get { return _coolantCoolantTemperatureCommand; }
+			set { _coolantCoolantTemperatureCommand = value; }
+		}
+
+		public string TempResponseList
+		{
+			get { return _tempResponseList; }
+			set
+			{
+				_tempResponseList = value;
+				OnPropertyChanged("TempResponseList");
+			}
+		}
+
 		#endregion
 
-		private readonly CancellationTokenSource _cancellationTokenSource;
+		#region Handlers
+
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
+		#endregion
+
+		private CancellationTokenSource _cancellationTokenSource;
 		private IBtConnectionManager _btManager;
 
 		private RpmCommand _rpmCommand;
+		private SpeedCommand _speedCommand;
+		private CoolantTemperatureCommand _coolantCoolantTemperatureCommand;
+
+		private string _tempResponseList;
+		private bool _useOneResponse;
 	}
 }

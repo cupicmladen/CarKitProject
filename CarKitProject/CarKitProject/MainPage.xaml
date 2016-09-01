@@ -35,9 +35,5 @@
     </Grid>
     <maps:Map x:Name="Map" Grid.Row="1" MapType="Hybrid" HasZoomEnabled="True" IsShowingUser="True"/>
   </Grid>-->
-
-<Grid>
   
-</Grid>
-
 </ContentPage>
