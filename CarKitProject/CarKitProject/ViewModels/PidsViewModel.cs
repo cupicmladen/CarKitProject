@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using CarKitProject.Annotations;
+using CarKitProject.Extensions;
 using CarKitProject.OBD;
 using CarKitProject.OBD.Commands;
 using Xamarin.Forms;
@@ -15,12 +15,12 @@ namespace CarKitProject.ViewModels
 	{
 		public PidsViewModel()
 		{
-			
 			TempResponseList = string.Empty;
 
 			RpmCommand = new RpmCommand();
 			SpeedCommand = new SpeedCommand();
 			CoolantTemperatureCommand = new CoolantTemperatureCommand();
+			FuelTankCommand = new FuelTankCommand();
 		}
 
 		public bool ConnectToObd()
@@ -42,7 +42,34 @@ namespace CarKitProject.ViewModels
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				TempResponseList += command.Length + ": " + command + Environment.NewLine;
+
+				var commandsSplit = command.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
+				for (int i = 0; i < commandsSplit.Length; i++)
+				{
+					var response = commandsSplit[i].SplitAndRefactor(2);
+					var obdCommand = FindCommand(response[0]);
+
+					if (obdCommand == null)
+						continue;
+
+					response.RemoveAt(0);
+					obdCommand.CalculateValue(response);
+				}
 			});
+		}
+
+		private ObdCommand FindCommand(string commandShort)
+		{
+			if (RpmCommand.CommandShort == commandShort)
+				return RpmCommand;
+
+			if (SpeedCommand.CommandShort == commandShort)
+				return SpeedCommand;
+
+			if (CoolantTemperatureCommand.CommandShort == commandShort)
+				return CoolantTemperatureCommand;
+
+			return null;
 		}
 
 		public void SendCommand(string command)
@@ -64,12 +91,14 @@ namespace CarKitProject.ViewModels
 						_btManager.SendCommand(RpmCommand.Command + " 1\r");
 						_btManager.SendCommand(SpeedCommand.Command + " 1\r");
 						_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
+						_btManager.SendCommand(FuelTankCommand.Command + " 1\r");
 					}
 					else
 					{
 						_btManager.SendCommand(RpmCommand.FormattedCommand);
 						_btManager.SendCommand(SpeedCommand.FormattedCommand);
 						_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+						_btManager.SendCommand(FuelTankCommand.FormattedCommand);
 					}
 				}
 			}, TaskCreationOptions.LongRunning, _cancellationTokenSource.Token);
@@ -105,6 +134,14 @@ namespace CarKitProject.ViewModels
 			set { _coolantCoolantTemperatureCommand = value; }
 		}
 
+		public FuelTankCommand FuelTankCommand
+		{
+			get { return _fuelTankCommand; }
+			set { _fuelTankCommand = value; }
+		}
+
+		#endregion
+
 		public string TempResponseList
 		{
 			get { return _tempResponseList; }
@@ -114,8 +151,6 @@ namespace CarKitProject.ViewModels
 				OnPropertyChanged("TempResponseList");
 			}
 		}
-
-		#endregion
 
 		#region Handlers
 
@@ -135,8 +170,9 @@ namespace CarKitProject.ViewModels
 		private RpmCommand _rpmCommand;
 		private SpeedCommand _speedCommand;
 		private CoolantTemperatureCommand _coolantCoolantTemperatureCommand;
+		private FuelTankCommand _fuelTankCommand;
 
 		private string _tempResponseList;
-		private bool _useOneResponse;
+		private bool _useOneResponse = false;
 	}
 }

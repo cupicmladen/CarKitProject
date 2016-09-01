@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CarKitProject.OBD.Commands
 {
@@ -7,15 +8,13 @@ namespace CarKitProject.OBD.Commands
 		public SpeedCommand()
 		{
 			Command = "010D";
-			BytesReturned = 1;
+			CommandShort = "0D";
+			Unit = "Km/H";
 		}
 
-		public override void FormatResult(string hexValue)
+		public override void CalculateValue(IList<string> hexValue)
 		{
-			var result = Convert.ToInt64(hexValue, 16);
+			Value = "" + Convert.ToInt64(hexValue[0], 16);
 		}
-
-		private int _value;
-
 	}
 }

@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using CarKitProject.Annotations;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class ObdCommand
+	public class ObdCommand : INotifyPropertyChanged
 	{
 		public string Command
 		{
@@ -10,16 +14,20 @@ namespace CarKitProject.OBD.Commands
 			set { _command = value; }
 		}
 
-		public string Response
+		public string CommandShort
 		{
-			get { return _response; }
-			set { _response = value; }
+			get { return _commandShort; }
+			set { _commandShort = value; }
 		}
 
 		public string Value
 		{
 			get { return _value; }
-			set { _value = value; }
+			set
+			{
+				_value = value;
+				OnPropertyChanged("Value");
+			}
 		}
 
 		public string Unit
@@ -28,23 +36,24 @@ namespace CarKitProject.OBD.Commands
 			set { _unit = value; }
 		}
 
-		public int BytesReturned
-		{
-			get { return _bytesReturned; }
-			set { _bytesReturned = value; }
-		}
-
 		public string FormattedCommand => Command + "\r";
 
-		public virtual void FormatResult(string hexValue)
+		public virtual void CalculateValue(IList<string> hexValue)
 		{
 			throw new NotImplementedException();
 		}
 
+		public event PropertyChangedEventHandler PropertyChanged;
+
+		[NotifyPropertyChangedInvocator]
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		}
+
 		private string _command;
-		private string _response;
+		private string _commandShort;
 		private string _value;
 		private string _unit;
-		private int _bytesReturned;
 	}
 }

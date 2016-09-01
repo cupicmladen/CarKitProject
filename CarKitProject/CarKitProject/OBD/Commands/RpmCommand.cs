@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CarKitProject.OBD.Commands
 {
@@ -7,14 +8,16 @@ namespace CarKitProject.OBD.Commands
 		public RpmCommand()
 		{
 			Command = "010C";
-			BytesReturned = 2;
+			CommandShort = "0C";
+			Unit = "RPM";
 		}
 
-		public override void FormatResult(string hexValue)
+		public override void CalculateValue(IList<string> hexValue)
 		{
-			var result = Convert.ToInt64(hexValue, 16);
-		}
+			var a = Convert.ToInt64(hexValue[0], 16);
+			var b = Convert.ToInt64(hexValue[1], 16);
 
-		private int _value;
+			Value = "" + ((256*a) + b)/4;
+		}
 	}
 }

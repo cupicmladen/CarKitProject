@@ -7,6 +7,7 @@
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
       <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
       <RowDefinition/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
@@ -27,8 +28,29 @@
       <Editor x:Name="CustomCommandText" WidthRequest="150"/>
       <Button x:Name="CustomButton" Text="Send" Clicked="ButtonCustom_OnClicked" WidthRequest="55" FontSize="10"/>
     </StackLayout>
-    <Editor Grid.Row="3" IsEnabled="False" Text="{Binding TempResponseList}"/>
-    <Grid Grid.Row="4">
+    <Grid Grid.Row="3" VerticalOptions="Start" HorizontalOptions="Start" RowSpacing="5" Margin="10" ColumnSpacing="10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+      <Label Text="RPM:"/>
+      <Label Text="Speed:" Grid.Row="1"/>
+      <Label Text="Coolant:" Grid.Row="2"/>
+      <Label Text="FuelTank:" Grid.Row="3"/>
+
+      <Label Text="{Binding RpmCommand.Value}" Grid.Column="1"/>
+      <Label Text="{Binding SpeedCommand.Value}" Grid.Column="1" Grid.Row="1"/>
+      <Label Text="{Binding CoolantTemperatureCommand.Value}" Grid.Column="1" Grid.Row="2"/>
+      <Label Text="{Binding FuelTankCommand.Value}" Grid.Column="1" Grid.Row="2"/>
+    </Grid>
+    <Editor Grid.Row="4" IsEnabled="False" Text="{Binding TempResponseList}" BackgroundColor="Yellow"/>
+    <Grid Grid.Row="5">
       <StackLayout Orientation="Horizontal" HorizontalOptions="End">
         <Button x:Name="Connect" Text="Con" Clicked="Connect_OnClicked" FontSize="10" WidthRequest="50"/>
         <Button x:Name="Log" Text="Log" Clicked="Log_OnClicked" FontSize="10" WidthRequest="50"/>

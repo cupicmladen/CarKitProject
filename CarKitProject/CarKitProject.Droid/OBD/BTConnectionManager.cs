@@ -98,7 +98,7 @@ namespace CarKitProject.Droid.OBD
 			{
 				count = _socket.InputStream.Read(buffer, 0, buffer.Length);
 				value += Encoding.ASCII.GetString(buffer, 0, count);
-				if (value.Contains(">"))
+				if (value.EndsWith(">"))
 					cont = false;
 			}
 
