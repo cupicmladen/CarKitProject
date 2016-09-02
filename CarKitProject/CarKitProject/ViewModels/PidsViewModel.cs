@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -41,7 +42,7 @@ namespace CarKitProject.ViewModels
 		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
-				TempResponseList += command.Length + ": " + command + Environment.NewLine;
+				//TempResponseList += DateTime.Now.ToString("mm:ss.fff") + ": " + command + Environment.NewLine;
 
 				var commandsSplit = command.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < commandsSplit.Length; i++)
@@ -49,7 +50,7 @@ namespace CarKitProject.ViewModels
 					var response = commandsSplit[i].SplitAndRefactor(2);
 
 					if (response.Count == 0)
-						return;
+						continue;
 
 					var obdCommand = FindCommand(response[0]);
 
@@ -94,46 +95,34 @@ namespace CarKitProject.ViewModels
 			if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
 				_cancellationTokenSource = new CancellationTokenSource();
 
+			
 			Task.Factory.StartNew((o) =>
 			{
+				var frequency = 0;
+
 				while (!_cancellationTokenSource.IsCancellationRequested)
 				{
-					if (_useOneResponse)
-					{
-						_btManager.SendCommand(RpmCommand.Command + " 1\r");
-						_btManager.SendCommand(SpeedCommand.Command + " 1\r");
-					}
-					else
-					{
-						_btManager.SendCommand(RpmCommand.FormattedCommand);
-						_btManager.SendCommand(SpeedCommand.FormattedCommand);
-					}
+					_btManager.SendCommand(RpmCommand.FormattedCommand);
+					_btManager.SendCommand(SpeedCommand.FormattedCommand);
 
 					rpmCounter++;
 					speedCounter++;
+
+					if (frequency % 1000 == 0)
+					{
+						_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+						_btManager.SendCommand(FuelTankCommand.FormattedCommand);
+
+						tempCounter++;
+						fuelCounter++;
+					}
+
+					frequency++;
+
+					if (frequency == int.MaxValue)
+						frequency = 0;
 				}
 			}, TaskCreationOptions.LongRunning, _cancellationTokenSource.Token);
-
-			Device.StartTimer(TimeSpan.FromSeconds(5), LoadSecondaryData);
-		}
-
-		private bool LoadSecondaryData()
-		{
-			if (_useOneResponse)
-			{
-				_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
-				_btManager.SendCommand(FuelTankCommand.Command + " 1\r");
-			}
-			else
-			{
-				_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
-				_btManager.SendCommand(FuelTankCommand.FormattedCommand);
-			}
-
-			tempCounter++;
-			fuelCounter++;
-
-			return true;
 		}
 
 		public void StopReadingData()
@@ -148,7 +137,7 @@ namespace CarKitProject.ViewModels
 
 		public void UseOneResponse(bool value)
 		{
-			_useOneResponse = value;
+
 		}
 
 		#region ObdCommands
@@ -210,6 +199,6 @@ namespace CarKitProject.ViewModels
 		private FuelTankCommand _fuelTankCommand;
 
 		private string _tempResponseList;
-		private bool _useOneResponse = false;
+		private bool _useOneResponse = true;
 	}
 }
