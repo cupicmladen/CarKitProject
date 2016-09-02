@@ -47,6 +47,10 @@ namespace CarKitProject.ViewModels
 				for (int i = 0; i < commandsSplit.Length; i++)
 				{
 					var response = commandsSplit[i].SplitAndRefactor(2);
+
+					if (response.Count == 0)
+						return;
+
 					var obdCommand = FindCommand(response[0]);
 
 					if (obdCommand == null)
@@ -69,6 +73,9 @@ namespace CarKitProject.ViewModels
 			if (CoolantTemperatureCommand.CommandShort == commandShort)
 				return CoolantTemperatureCommand;
 
+			if (FuelTankCommand.CommandShort == commandShort)
+				return FuelTankCommand;
+
 			return null;
 		}
 
@@ -77,9 +84,14 @@ namespace CarKitProject.ViewModels
 			_btManager.SendCommand(command);
 		}
 
+		private int rpmCounter = 0;
+		private int speedCounter = 0;
+		private int tempCounter = 0;
+		private int fuelCounter = 0;
+
 		public void LoadData()
 		{
-			if(_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+			if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
 				_cancellationTokenSource = new CancellationTokenSource();
 
 			Task.Factory.StartNew((o) =>
@@ -90,23 +102,48 @@ namespace CarKitProject.ViewModels
 					{
 						_btManager.SendCommand(RpmCommand.Command + " 1\r");
 						_btManager.SendCommand(SpeedCommand.Command + " 1\r");
-						_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
-						_btManager.SendCommand(FuelTankCommand.Command + " 1\r");
 					}
 					else
 					{
 						_btManager.SendCommand(RpmCommand.FormattedCommand);
 						_btManager.SendCommand(SpeedCommand.FormattedCommand);
-						_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
-						_btManager.SendCommand(FuelTankCommand.FormattedCommand);
 					}
+
+					rpmCounter++;
+					speedCounter++;
 				}
 			}, TaskCreationOptions.LongRunning, _cancellationTokenSource.Token);
+
+			Device.StartTimer(TimeSpan.FromSeconds(5), LoadSecondaryData);
+		}
+
+		private bool LoadSecondaryData()
+		{
+			if (_useOneResponse)
+			{
+				_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
+				_btManager.SendCommand(FuelTankCommand.Command + " 1\r");
+			}
+			else
+			{
+				_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+				_btManager.SendCommand(FuelTankCommand.FormattedCommand);
+			}
+
+			tempCounter++;
+			fuelCounter++;
+
+			return true;
 		}
 
 		public void StopReadingData()
 		{
 			_cancellationTokenSource.Cancel();
+
+			RpmCommand.Counter = rpmCounter;
+			SpeedCommand.Counter = speedCounter;
+			CoolantTemperatureCommand.Counter = tempCounter;
+			FuelTankCommand.Counter = fuelCounter;
 		}
 
 		public void UseOneResponse(bool value)

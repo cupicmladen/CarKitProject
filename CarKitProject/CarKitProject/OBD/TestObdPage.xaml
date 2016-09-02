@@ -32,6 +32,7 @@
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
         <ColumnDefinition/>
+        <ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <Grid.RowDefinitions>
         <RowDefinition/>
@@ -47,7 +48,12 @@
       <Label Text="{Binding RpmCommand.Value}" Grid.Column="1"/>
       <Label Text="{Binding SpeedCommand.Value}" Grid.Column="1" Grid.Row="1"/>
       <Label Text="{Binding CoolantTemperatureCommand.Value}" Grid.Column="1" Grid.Row="2"/>
-      <Label Text="{Binding FuelTankCommand.Value}" Grid.Column="1" Grid.Row="2"/>
+      <Label Text="{Binding FuelTankCommand.Value}" Grid.Column="1" Grid.Row="3"/>
+
+      <Label Text="{Binding RpmCommand.Counter}" Grid.Column="2"/>
+      <Label Text="{Binding SpeedCommand.Counter}" Grid.Column="2" Grid.Row="1"/>
+      <Label Text="{Binding CoolantTemperatureCommand.Counter}" Grid.Column="2" Grid.Row="2"/>
+      <Label Text="{Binding FuelTankCommand.Counter}" Grid.Column="2" Grid.Row="3"/>
     </Grid>
     <Editor Grid.Row="4" IsEnabled="False" Text="{Binding TempResponseList}" BackgroundColor="Yellow"/>
     <Grid Grid.Row="5">
