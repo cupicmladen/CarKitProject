@@ -10,7 +10,10 @@ namespace CarKitProject.OBD.Commands
 			Command = "010D";
 			CommandShort = "0D";
 			Unit = "Km/H";
+			Value = "0";
 		}
+
+		public int GetSpeed => int.Parse(Value);
 
 		public override void CalculateValue(IList<string> hexValue)
 		{

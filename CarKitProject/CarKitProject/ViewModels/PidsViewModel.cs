@@ -59,6 +59,9 @@ namespace CarKitProject.ViewModels
 
 					response.RemoveAt(0);
 					obdCommand.CalculateValue(response);
+
+					if(_calculateGear)
+						CalculateGear();
 				}
 			});
 		}
@@ -137,7 +140,40 @@ namespace CarKitProject.ViewModels
 
 		public void UseOneResponse(bool value)
 		{
+			_calculateGear = value;
+			//SpeedCommand.Value = "64";
+			//RpmCommand.Value = "3500";
+			//CalculateGear();
+		}
 
+		private void CalculateGear()
+		{
+			var result = (decimal)SpeedCommand.GetSpeed / RpmCommand.GetRpm;
+
+			if (result > 0 && result <= 0.01m)
+			{
+				Gear = 1;
+			}
+			else if (result >= 0.01m && result <= 0.02m)
+			{
+				Gear = 2;
+			}
+			else if (result >= 0.02m && result <= 0.03m)
+			{
+				Gear = 3;
+			}
+			else if (result >= 0.03m && result <= 0.04m)
+			{
+				Gear = 4;
+			}
+			else if (result >= 0.04m && result <= 0.05m)
+			{
+				Gear = 5;
+			}
+			else
+			{
+				Gear = 0;
+			}
 		}
 
 		#region ObdCommands
@@ -178,6 +214,16 @@ namespace CarKitProject.ViewModels
 			}
 		}
 
+		public int Gear
+		{
+			get { return _gear; }
+			set
+			{
+				_gear = value;
+				OnPropertyChanged("Gear");
+			}
+		}
+
 		#region Handlers
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -197,8 +243,11 @@ namespace CarKitProject.ViewModels
 		private SpeedCommand _speedCommand;
 		private CoolantTemperatureCommand _coolantCoolantTemperatureCommand;
 		private FuelTankCommand _fuelTankCommand;
+		private int _gear;
 
 		private string _tempResponseList;
 		private bool _useOneResponse = true;
+
+		private bool _calculateGear = false;
 	}
 }

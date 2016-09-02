@@ -55,7 +55,8 @@
       <Label Text="{Binding CoolantTemperatureCommand.Counter}" Grid.Column="2" Grid.Row="2"/>
       <Label Text="{Binding FuelTankCommand.Counter}" Grid.Column="2" Grid.Row="3"/>
     </Grid>
-    <Editor Grid.Row="4" IsEnabled="False" Text="{Binding TempResponseList}" BackgroundColor="Yellow"/>
+    <!--<Editor Grid.Row="4" IsEnabled="False" Text="{Binding TempResponseList}" BackgroundColor="Yellow"/>-->
+    <Label Grid.Row="4" Text="{Binding Gear}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="70" TextColor="Red"/>
     <Grid Grid.Row="5">
       <StackLayout Orientation="Horizontal" HorizontalOptions="End">
         <Button x:Name="Connect" Text="Con" Clicked="Connect_OnClicked" FontSize="10" WidthRequest="50"/>

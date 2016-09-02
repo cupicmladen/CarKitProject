@@ -10,7 +10,10 @@ namespace CarKitProject.OBD.Commands
 			Command = "010C";
 			CommandShort = "0C";
 			Unit = "RPM";
+			Value = "0";
 		}
+
+		public int GetRpm => int.Parse(Value);
 
 		public override void CalculateValue(IList<string> hexValue)
 		{
