@@ -46,7 +46,6 @@
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Interfaces\ICurrentLocationService.cs" />
     <Compile Include="OBD\Commands\CoolantTemperatureCommand.cs" />
-    <Compile Include="OBD\Commands\FuelTankCommand.cs" />
     <Compile Include="OBD\Commands\RpmCommand.cs" />
     <Compile Include="OBD\Commands\SpeedCommand.cs" />
     <Compile Include="OBD\IFileService.cs" />

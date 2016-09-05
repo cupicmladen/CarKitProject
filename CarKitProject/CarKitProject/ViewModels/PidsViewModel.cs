@@ -21,7 +21,6 @@ namespace CarKitProject.ViewModels
 			RpmCommand = new RpmCommand();
 			SpeedCommand = new SpeedCommand();
 			CoolantTemperatureCommand = new CoolantTemperatureCommand();
-			FuelTankCommand = new FuelTankCommand();
 		}
 
 		public bool ConnectToObd()
@@ -44,21 +43,32 @@ namespace CarKitProject.ViewModels
 			{
 				//TempResponseList += DateTime.Now.ToString("mm:ss.fff") + ": " + command + Environment.NewLine;
 
+				ResponsesTotalLineCounter++;
+
 				var commandsSplit = command.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < commandsSplit.Length; i++)
 				{
 					var response = commandsSplit[i].SplitAndRefactor(2);
 
 					if (response.Count == 0)
+					{
+						InvalidResponses++;
 						continue;
+					}
+						
 
 					var obdCommand = FindCommand(response[0]);
 
 					if (obdCommand == null)
+					{
+						InvalidResponses++;
 						continue;
+					}
 
 					response.RemoveAt(0);
 					obdCommand.CalculateValue(response);
+
+					ValidResponsesWithSplitCounter++;
 
 					if(_calculateGear)
 						CalculateGear();
@@ -77,9 +87,6 @@ namespace CarKitProject.ViewModels
 			if (CoolantTemperatureCommand.CommandShort == commandShort)
 				return CoolantTemperatureCommand;
 
-			if (FuelTankCommand.CommandShort == commandShort)
-				return FuelTankCommand;
-
 			return null;
 		}
 
@@ -87,11 +94,6 @@ namespace CarKitProject.ViewModels
 		{
 			_btManager.SendCommand(command);
 		}
-
-		private int rpmCounter = 0;
-		private int speedCounter = 0;
-		private int tempCounter = 0;
-		private int fuelCounter = 0;
 
 		public void LoadData()
 		{
@@ -105,25 +107,49 @@ namespace CarKitProject.ViewModels
 
 				while (!_cancellationTokenSource.IsCancellationRequested)
 				{
-					_btManager.SendCommand(RpmCommand.FormattedCommand);
-					_btManager.SendCommand(SpeedCommand.FormattedCommand);
-
-					rpmCounter++;
-					speedCounter++;
-
-					if (frequency % 1000 == 0)
+					if (UseFirstResponse)
 					{
-						_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
-						_btManager.SendCommand(FuelTankCommand.FormattedCommand);
+						_btManager.SendCommand(RpmCommand.Command + " 1\r");
+						CommandsSentCounter++;
+						OuterCounter++;
+						_btManager.SendCommand(SpeedCommand.Command + " 1\r");
+						CommandsSentCounter++;
+						OuterCounter++;
 
-						tempCounter++;
-						fuelCounter++;
+						if (frequency % 1000 == 0)
+						{
+							_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
+							CommandsSentCounter++;
+							InternalCounter++;
+						}
+
+						frequency++;
+
+						if (frequency == int.MaxValue)
+							frequency = 0;
+					}
+					else
+					{
+						_btManager.SendCommand(RpmCommand.FormattedCommand);
+						CommandsSentCounter++;
+						OuterCounter++;
+						_btManager.SendCommand(SpeedCommand.FormattedCommand);
+						CommandsSentCounter++;
+						OuterCounter++;
+
+						if (frequency % 1000 == 0)
+						{
+							_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+							CommandsSentCounter++;
+							InternalCounter++;
+						}
+
+						frequency++;
+
+						if (frequency == int.MaxValue)
+							frequency = 0;
 					}
 
-					frequency++;
-
-					if (frequency == int.MaxValue)
-						frequency = 0;
 				}
 			}, TaskCreationOptions.LongRunning, _cancellationTokenSource.Token);
 		}
@@ -131,19 +157,11 @@ namespace CarKitProject.ViewModels
 		public void StopReadingData()
 		{
 			_cancellationTokenSource.Cancel();
-
-			RpmCommand.Counter = rpmCounter;
-			SpeedCommand.Counter = speedCounter;
-			CoolantTemperatureCommand.Counter = tempCounter;
-			FuelTankCommand.Counter = fuelCounter;
 		}
 
 		public void UseOneResponse(bool value)
 		{
-			_calculateGear = value;
-			//SpeedCommand.Value = "64";
-			//RpmCommand.Value = "3500";
-			//CalculateGear();
+			UseFirstResponse = value;
 		}
 
 		private void CalculateGear()
@@ -170,6 +188,10 @@ namespace CarKitProject.ViewModels
 			{
 				Gear = 5;
 			}
+			else if (result >= 0.05m && result <= 0.06m)
+			{
+				Gear = 6;
+			}
 			else
 			{
 				Gear = 0;
@@ -194,12 +216,6 @@ namespace CarKitProject.ViewModels
 		{
 			get { return _coolantCoolantTemperatureCommand; }
 			set { _coolantCoolantTemperatureCommand = value; }
-		}
-
-		public FuelTankCommand FuelTankCommand
-		{
-			get { return _fuelTankCommand; }
-			set { _fuelTankCommand = value; }
 		}
 
 		#endregion
@@ -242,12 +258,19 @@ namespace CarKitProject.ViewModels
 		private RpmCommand _rpmCommand;
 		private SpeedCommand _speedCommand;
 		private CoolantTemperatureCommand _coolantCoolantTemperatureCommand;
-		private FuelTankCommand _fuelTankCommand;
 		private int _gear;
 
 		private string _tempResponseList;
-		private bool _useOneResponse = true;
+		public bool UseFirstResponse = false;
+		public bool UseAtat2Command = false;
 
-		private bool _calculateGear = false;
+		private bool _calculateGear = true;
+
+		public int CommandsSentCounter = 0;
+		public int ResponsesTotalLineCounter = 0;
+		public int ValidResponsesWithSplitCounter = 0;
+		public int InvalidResponses = 0;
+		public int OuterCounter = 0;
+		public int InternalCounter = 0;
 	}
 }

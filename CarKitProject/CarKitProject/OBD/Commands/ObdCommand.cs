@@ -30,16 +30,6 @@ namespace CarKitProject.OBD.Commands
 			}
 		}
 
-		public int Counter
-		{
-			get { return _counter; }
-			set
-			{
-				_counter = value;
-				OnPropertyChanged("Counter");
-			}
-		}
-
 		public string Unit
 		{
 			get { return _unit; }
@@ -65,6 +55,5 @@ namespace CarKitProject.OBD.Commands
 		private string _commandShort;
 		private string _value;
 		private string _unit;
-		private int _counter;
 	}
 }

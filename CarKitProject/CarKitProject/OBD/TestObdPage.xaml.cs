@@ -28,6 +28,9 @@ namespace CarKitProject.OBD
 			var command = (sender as Button).Text;
 			_viewModel.TempResponseList += "---------- " + command + " ----------" + Environment.NewLine;
 
+			if (command == "atat2")
+				_viewModel.UseAtat2Command = true;
+
 			command += "\r";
 
 			_viewModel.TempResponseList += text;
@@ -62,11 +65,27 @@ namespace CarKitProject.OBD
 		private void Log_OnClicked(object sender, EventArgs e)
 		{
 			var fileService = DependencyService.Get<IFileService>();
-			var dateTime = DateTime.Now.ToString("f");
-			var textToSave = Environment.NewLine + "-----" + dateTime + "-----" + Environment.NewLine;
-			textToSave += _viewModel.TempResponseList;
+
+			var title = "Init";
+
+			if (_viewModel.UseFirstResponse)
+				title += "  1\\r";
+
+			if(_viewModel.UseAtat2Command)
+				title += " Atat2";
+
+			var textToSave = Environment.NewLine + "-----" + title + "-----" + Environment.NewLine + Environment.NewLine;
+
+			var stat = string.Empty;
+			stat += "CommandsSentCounter:            " + _viewModel.CommandsSentCounter + Environment.NewLine + Environment.NewLine;
+			stat += "ResponsesTotalLineCounter:      " + _viewModel.ResponsesTotalLineCounter + Environment.NewLine + Environment.NewLine;
+			stat += "ValidResponsesWithSplitCounter: " + _viewModel.ValidResponsesWithSplitCounter + Environment.NewLine + Environment.NewLine;
+			stat += "InvalidResponses:               " + _viewModel.InvalidResponses + Environment.NewLine + Environment.NewLine;
+			stat += "OuterCounter:                   " + _viewModel.OuterCounter + Environment.NewLine + Environment.NewLine;
+			stat += "InternalCounter:                " + _viewModel.InternalCounter + Environment.NewLine;
+
+			textToSave += stat;
 			fileService.SaveToSdCard(textToSave, "log");
-			_viewModel.TempResponseList = string.Empty;
 		}
 
 		private string NewLine()

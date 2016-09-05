@@ -20,7 +20,7 @@
     </StackLayout>
     <StackLayout Orientation="Horizontal" Grid.Row="1">
       <Button x:Name="Cra" Text="atcra 7e8" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
-      <Button x:Name="At2" Text="atat2" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10" IsEnabled="False"/>
+      <Button x:Name="At2" Text="atat2" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10" />
       <Button x:Name="Init" Text="0100" Clicked="Button_OnClicked" WidthRequest="55" FontSize="10"/>
       <Switch Toggled="Switch_OnToggled"/>
     </StackLayout>
@@ -32,10 +32,8 @@
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
         <ColumnDefinition/>
-        <ColumnDefinition/>
       </Grid.ColumnDefinitions>
       <Grid.RowDefinitions>
-        <RowDefinition/>
         <RowDefinition/>
         <RowDefinition/>
         <RowDefinition/>
@@ -43,17 +41,10 @@
       <Label Text="RPM:"/>
       <Label Text="Speed:" Grid.Row="1"/>
       <Label Text="Coolant:" Grid.Row="2"/>
-      <Label Text="FuelTank:" Grid.Row="3"/>
 
       <Label Text="{Binding RpmCommand.Value}" Grid.Column="1"/>
       <Label Text="{Binding SpeedCommand.Value}" Grid.Column="1" Grid.Row="1"/>
       <Label Text="{Binding CoolantTemperatureCommand.Value}" Grid.Column="1" Grid.Row="2"/>
-      <Label Text="{Binding FuelTankCommand.Value}" Grid.Column="1" Grid.Row="3"/>
-
-      <Label Text="{Binding RpmCommand.Counter}" Grid.Column="2"/>
-      <Label Text="{Binding SpeedCommand.Counter}" Grid.Column="2" Grid.Row="1"/>
-      <Label Text="{Binding CoolantTemperatureCommand.Counter}" Grid.Column="2" Grid.Row="2"/>
-      <Label Text="{Binding FuelTankCommand.Counter}" Grid.Column="2" Grid.Row="3"/>
     </Grid>
     <!--<Editor Grid.Row="4" IsEnabled="False" Text="{Binding TempResponseList}" BackgroundColor="Yellow"/>-->
     <Label Grid.Row="4" Text="{Binding Gear}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="70" TextColor="Red"/>
