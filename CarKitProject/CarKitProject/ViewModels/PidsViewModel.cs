@@ -48,7 +48,8 @@ namespace CarKitProject.ViewModels
 			Device.BeginInvokeOnMainThread(() =>
 			{
 				//TempResponseList += DateTime.Now.ToString("mm:ss.fff") + ": " + command + Environment.NewLine;
-
+				TempResponseList += command + Environment.NewLine;
+				
 				ResponsesTotalLineCounter++;
 
 				var commandsSplit = command.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
@@ -129,57 +130,77 @@ namespace CarKitProject.ViewModels
 
 				while (!_cancellationTokenSource.IsCancellationRequested)
 				{
-					if (UseFirstResponse)
-					{
-						_btManager.SendCommand(RpmCommand.Command + " 1\r");
-						CommandsSentCounter++;
-						OuterCounter++;
-						_btManager.SendCommand(SpeedCommand.Command + " 1\r");
-						CommandsSentCounter++;
-						OuterCounter++;
-
-						if (frequency % 1000 == 0)
-						{
-							_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
-							CommandsSentCounter++;
-							InternalCounter++;
-							_btManager.SendCommand(EngineOilTemperatureCommand.Command + " 1\r");
-							CommandsSentCounter++;
-							InternalCounter++;
-						}
-
-						frequency++;
-
-						if (frequency == int.MaxValue)
-							frequency = 0;
-					}
+					if(CommandsSentCounter % 2 == 0)
+						TestSendCommand(RpmCommand);
 					else
+						TestSendCommand(SpeedCommand);
+
+					if (CommandsSentCounter == int.MaxValue)
 					{
-						_btManager.SendCommand(RpmCommand.FormattedCommand);
-						CommandsSentCounter++;
-						OuterCounter++;
-						_btManager.SendCommand(SpeedCommand.FormattedCommand);
-						CommandsSentCounter++;
-						OuterCounter++;
-
-						if (frequency % 1000 == 0)
-						{
-							_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
-							CommandsSentCounter++;
-							InternalCounter++;
-							_btManager.SendCommand(EngineOilTemperatureCommand.FormattedCommand);
-							CommandsSentCounter++;
-							InternalCounter++;
-						}
-
-						frequency++;
-
-						if (frequency == int.MaxValue)
-							frequency = 0;
+						CommandsSentCounter = 0;
+						InternalCounter++;
 					}
+						
+					Task.Delay(50).Wait();
+
+					//if (UseFirstResponse)
+					//{
+					//	_btManager.SendCommand(RpmCommand.Command + " 1\r");
+					//	CommandsSentCounter++;
+					//	OuterCounter++;
+					//	_btManager.SendCommand(SpeedCommand.Command + " 1\r");
+					//	CommandsSentCounter++;
+					//	OuterCounter++;
+
+						//	if (frequency % 1000 == 0)
+						//	{
+						//		_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
+						//		CommandsSentCounter++;
+						//		InternalCounter++;
+						//		_btManager.SendCommand(EngineOilTemperatureCommand.Command + " 1\r");
+						//		CommandsSentCounter++;
+						//		InternalCounter++;
+						//	}
+
+						//	frequency++;
+
+						//	if (frequency == int.MaxValue)
+						//		frequency = 0;
+						//}
+						//else
+						//{
+						//	_btManager.SendCommand(RpmCommand.FormattedCommand);
+						//	CommandsSentCounter++;
+						//	OuterCounter++;
+						//	_btManager.SendCommand(SpeedCommand.FormattedCommand);
+						//	CommandsSentCounter++;
+						//	OuterCounter++;
+
+						//	if (frequency % 1000 == 0)
+						//	{
+						//		_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+						//		CommandsSentCounter++;
+						//		InternalCounter++;
+						//		_btManager.SendCommand(EngineOilTemperatureCommand.FormattedCommand);
+						//		CommandsSentCounter++;
+						//		InternalCounter++;
+						//	}
+
+						//	frequency++;
+
+						//	if (frequency == int.MaxValue)
+						//		frequency = 0;
+						//}
 
 				}
 			}, TaskCreationOptions.LongRunning, _cancellationTokenSource.Token);
+		}
+
+		private void TestSendCommand(ObdCommand command)
+		{
+			TempResponseList += ">" + command.Command + Environment.NewLine;
+			_btManager.SendCommand(command.Command + " 1\r");
+			CommandsSentCounter++;
 		}
 
 		public void StopReadingData()

@@ -89,6 +89,10 @@ namespace CarKitProject.OBD
 
 			textToSave += stat;
 			fileService.SaveToSdCard(textToSave, "log");
+
+			string loopToSave = Environment.NewLine + "---------------------NOVI LOOP------------------------" + Environment.NewLine + Environment.NewLine;
+			loopToSave += _viewModel.TempResponseList + Environment.NewLine;
+			fileService.SaveToSdCard(loopToSave, "loop");
 		}
 
 		private void Pids_OnClicked(object sender, EventArgs e)
