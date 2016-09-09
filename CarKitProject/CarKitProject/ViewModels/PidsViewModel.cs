@@ -21,6 +21,12 @@ namespace CarKitProject.ViewModels
 			RpmCommand = new RpmCommand();
 			SpeedCommand = new SpeedCommand();
 			CoolantTemperatureCommand = new CoolantTemperatureCommand();
+			EngineOilTemperatureCommand = new EngineOilTemperatureCommand();
+			CalculatedEngineLoadCommand = new CalculatedEngineLoadCommand();
+			FuelTankLevelCommand = new FuelTankLevelCommand();
+			EngineFuelRateCommand = new EngineFuelRateCommand();
+			MafAirFlowRateCommand = new MafAirFlowRateCommand();
+
 		}
 
 		public bool ConnectToObd()
@@ -87,6 +93,21 @@ namespace CarKitProject.ViewModels
 			if (CoolantTemperatureCommand.CommandShort == commandShort)
 				return CoolantTemperatureCommand;
 
+			if (EngineOilTemperatureCommand.CommandShort == commandShort)
+				return EngineOilTemperatureCommand;
+
+			if (CalculatedEngineLoadCommand.CommandShort == commandShort)
+				return CalculatedEngineLoadCommand;
+
+			if (FuelTankLevelCommand.CommandShort == commandShort)
+				return FuelTankLevelCommand;
+
+			if (EngineFuelRateCommand.CommandShort == commandShort)
+				return EngineFuelRateCommand;
+
+			if (MafAirFlowRateCommand.CommandShort == commandShort)
+				return MafAirFlowRateCommand;
+
 			return null;
 		}
 
@@ -100,7 +121,8 @@ namespace CarKitProject.ViewModels
 			if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
 				_cancellationTokenSource = new CancellationTokenSource();
 
-			
+			StartTime = DateTime.Now;
+
 			Task.Factory.StartNew((o) =>
 			{
 				var frequency = 0;
@@ -119,6 +141,9 @@ namespace CarKitProject.ViewModels
 						if (frequency % 1000 == 0)
 						{
 							_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
+							CommandsSentCounter++;
+							InternalCounter++;
+							_btManager.SendCommand(EngineOilTemperatureCommand.Command + " 1\r");
 							CommandsSentCounter++;
 							InternalCounter++;
 						}
@@ -140,6 +165,9 @@ namespace CarKitProject.ViewModels
 						if (frequency % 1000 == 0)
 						{
 							_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+							CommandsSentCounter++;
+							InternalCounter++;
+							_btManager.SendCommand(EngineOilTemperatureCommand.FormattedCommand);
 							CommandsSentCounter++;
 							InternalCounter++;
 						}
@@ -166,6 +194,9 @@ namespace CarKitProject.ViewModels
 
 		private void CalculateGear()
 		{
+			if(RpmCommand.GetRpm == 0)
+				return;
+
 			var result = (decimal)SpeedCommand.GetSpeed / RpmCommand.GetRpm;
 
 			if (result > 0 && result <= 0.01m)
@@ -218,6 +249,36 @@ namespace CarKitProject.ViewModels
 			set { _coolantCoolantTemperatureCommand = value; }
 		}
 
+		public EngineOilTemperatureCommand EngineOilTemperatureCommand
+		{
+			get { return _engineOilTemperatureCommand; }
+			set { _engineOilTemperatureCommand = value; }
+		}
+
+		public CalculatedEngineLoadCommand CalculatedEngineLoadCommand
+		{
+			get { return _calculatedEngineLoadCommand; }
+			set { _calculatedEngineLoadCommand = value; }
+		}
+
+		public FuelTankLevelCommand FuelTankLevelCommand
+		{
+			get { return _fuelTankLevelCommand; }
+			set { _fuelTankLevelCommand = value; }
+		}
+
+		public EngineFuelRateCommand EngineFuelRateCommand
+		{
+			get { return _engineFuelRateCommand; }
+			set { _engineFuelRateCommand = value; }
+		}
+
+		public MafAirFlowRateCommand MafAirFlowRateCommand
+		{
+			get { return _mafAirFlowRateCommand; }
+			set { _mafAirFlowRateCommand = value; }
+		}
+
 		#endregion
 
 		public string TempResponseList
@@ -258,6 +319,11 @@ namespace CarKitProject.ViewModels
 		private RpmCommand _rpmCommand;
 		private SpeedCommand _speedCommand;
 		private CoolantTemperatureCommand _coolantCoolantTemperatureCommand;
+		private EngineOilTemperatureCommand _engineOilTemperatureCommand;
+		private CalculatedEngineLoadCommand _calculatedEngineLoadCommand;
+		private FuelTankLevelCommand _fuelTankLevelCommand;
+		private EngineFuelRateCommand _engineFuelRateCommand;
+		private MafAirFlowRateCommand _mafAirFlowRateCommand;
 		private int _gear;
 
 		private string _tempResponseList;
@@ -272,5 +338,7 @@ namespace CarKitProject.ViewModels
 		public int InvalidResponses = 0;
 		public int OuterCounter = 0;
 		public int InternalCounter = 0;
+
+		public DateTime StartTime;
 	}
 }

@@ -9,6 +9,7 @@ namespace CarKitProject.OBD
 		public TestObdPage()
 		{
 			InitializeComponent();
+			NavigationPage.SetHasNavigationBar(this, false);
 			_viewModel = new PidsViewModel();
 			BindingContext = _viewModel;
 		}
@@ -74,7 +75,9 @@ namespace CarKitProject.OBD
 			if(_viewModel.UseAtat2Command)
 				title += " Atat2";
 
-			var textToSave = Environment.NewLine + "-----" + title + "-----" + Environment.NewLine + Environment.NewLine;
+			var duration = DateTime.Now.Subtract(_viewModel.StartTime).ToString("ss':'fff");
+
+			var textToSave = Environment.NewLine + "-----" + title + "-----" + duration + "-----" + Environment.NewLine + Environment.NewLine;
 
 			var stat = string.Empty;
 			stat += "CommandsSentCounter:            " + _viewModel.CommandsSentCounter + Environment.NewLine + Environment.NewLine;
@@ -86,6 +89,11 @@ namespace CarKitProject.OBD
 
 			textToSave += stat;
 			fileService.SaveToSdCard(textToSave, "log");
+		}
+
+		private void Pids_OnClicked(object sender, EventArgs e)
+		{
+			Navigation.PushAsync(new PidsListPage() {BindingContext = _viewModel});
 		}
 
 		private string NewLine()

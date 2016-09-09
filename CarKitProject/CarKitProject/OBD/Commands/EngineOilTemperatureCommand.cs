@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class CoolantTemperatureCommand : ObdCommand
+	public class EngineOilTemperatureCommand : ObdCommand
 	{
-		public CoolantTemperatureCommand()
+		public EngineOilTemperatureCommand()
 		{
-			Command = "0105";
-			CommandShort = "05";
+			Command = "015C";
+			CommandShort = "5C";
 			Value = "0";
 			Unit = "C";
 		}
