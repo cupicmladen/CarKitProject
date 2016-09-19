@@ -1,5 +1,8 @@
 ﻿using Android.App;
 using Android.Content.PM;
+using Android.Graphics;
+using Android.Media;
+using Android.Net;
 using Android.OS;
 using CarKitProject.Interfaces;
 using Xamarin.Forms;

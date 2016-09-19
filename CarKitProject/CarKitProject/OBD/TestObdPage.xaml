@@ -42,15 +42,15 @@
       <Label Text="RPM:"/>
       <Label Text="Speed:" Grid.Row="1"/>
       <Label Text="Coolant:" Grid.Row="2"/>
-      <Label Text="Engine Oil:" Grid.Row="3"/>
+      <Label Text="Maf:" Grid.Row="3"/>
 
       <Label Text="{Binding RpmCommand.Value}" Grid.Column="1"/>
       <Label Text="{Binding SpeedCommand.Value}" Grid.Column="1" Grid.Row="1"/>
       <Label Text="{Binding CoolantTemperatureCommand.Value}" Grid.Column="1" Grid.Row="2"/>
-      <Label Text="{Binding EngineOilTemperatureCommand.Value}" Grid.Column="1" Grid.Row="3"/>
+      <Label Text="{Binding MafAirFlowRateCommand.Value}" Grid.Column="1" Grid.Row="3"/>
     </Grid>
     <!--<Editor Grid.Row="4" IsEnabled="False" Text="{Binding TempResponseList}" BackgroundColor="Yellow"/>-->
-    <Label Grid.Row="4" Text="{Binding Gear}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="70" TextColor="Red"/>
+    <Label Grid.Row="4" Text="{Binding CalculatedCurrentConsumptionCommand}" HorizontalOptions="Center" VerticalOptions="Center" FontSize="70" TextColor="Red"/>
     <Grid Grid.Row="5">
       <StackLayout Orientation="Horizontal" HorizontalOptions="End">
         <Button x:Name="Connect" Text="Con" Clicked="Connect_OnClicked" FontSize="10" WidthRequest="50"/>

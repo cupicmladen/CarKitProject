@@ -77,10 +77,22 @@ namespace CarKitProject.ViewModels
 
 					ValidResponsesWithSplitCounter++;
 
-					if(_calculateGear)
-						CalculateGear();
+					if (_calculateGear)
+					{
+						//CalculateGear();
+						CalculateCurrentConsumption();
+					}
+						
 				}
 			});
+		}
+
+		private void CalculateCurrentConsumption()
+		{
+			if (SpeedCommand.GetSpeed != 0 && MafAirFlowRateCommand.GetMafAirFlowRate != 0)
+			{
+				CalculatedCurrentConsumptionCommand = "" + SpeedCommand.GetSpeed/(MafAirFlowRateCommand.GetMafAirFlowRate/4.08333333);
+			}
 		}
 
 		private ObdCommand FindCommand(string commandShort)
@@ -130,17 +142,18 @@ namespace CarKitProject.ViewModels
 
 				while (!_cancellationTokenSource.IsCancellationRequested)
 				{
-					if(CommandsSentCounter % 2 == 0)
+					if(frequency == 0)
 						TestSendCommand(RpmCommand);
-					else
+					else if(frequency == 1)
 						TestSendCommand(SpeedCommand);
+					else if(frequency == 2)
+						TestSendCommand(MafAirFlowRateCommand);
 
-					if (CommandsSentCounter == int.MaxValue)
-					{
-						CommandsSentCounter = 0;
-						InternalCounter++;
-					}
-						
+					if (frequency == 2)
+						frequency = -1;
+
+					frequency++;
+
 					Task.Delay(50).Wait();
 
 					//if (UseFirstResponse)
@@ -200,7 +213,7 @@ namespace CarKitProject.ViewModels
 		{
 			TempResponseList += ">" + command.Command + Environment.NewLine;
 			_btManager.SendCommand(command.Command + " 1\r");
-			CommandsSentCounter++;
+			//CommandsSentCounter++;
 		}
 
 		public void StopReadingData()
@@ -322,6 +335,16 @@ namespace CarKitProject.ViewModels
 			}
 		}
 
+		public string CalculatedCurrentConsumptionCommand
+		{
+			get { return _calculatedCurrentConsumptionCommand; }
+			set
+			{
+				_calculatedCurrentConsumptionCommand = value;
+				OnPropertyChanged("CalculatedCurrentConsumptionCommand");
+			}
+		}
+
 		#region Handlers
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -345,6 +368,7 @@ namespace CarKitProject.ViewModels
 		private FuelTankLevelCommand _fuelTankLevelCommand;
 		private EngineFuelRateCommand _engineFuelRateCommand;
 		private MafAirFlowRateCommand _mafAirFlowRateCommand;
+		private string _calculatedCurrentConsumptionCommand;
 		private int _gear;
 
 		private string _tempResponseList;
