@@ -36,7 +36,7 @@ namespace CarKitProject.OBD.Commands
 			set { _unit = value; }
 		}
 
-		public string FormattedCommand => Command + "\r";
+		public string FormattedCommand => Command + " 1\r";
 
 		public virtual void CalculateValue(IList<string> hexValue)
 		{

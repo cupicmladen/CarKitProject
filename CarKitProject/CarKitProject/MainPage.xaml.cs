@@ -18,16 +18,16 @@ namespace CarKitProject
 		{
 			InitializeComponent();
 
-			//var imageSource = ImageLoader.LoadImageFromResources("hexagons_texture_2560x1440.jpg");
-			//BackgroundImg.Source = imageSource;
+			var imageSource = ImageLoader.LoadImageFromResources("hexagons_texture_2560x1440.jpg");
+			BackgroundImg.Source = imageSource;
 
-			//var currentLocationService = DependencyService.Get<ICurrentLocationService>();
-			//currentLocationService.RaiseLocationChanged += CurrentLocationService_RaiseLocationChanged;
+			var currentLocationService = DependencyService.Get<ICurrentLocationService>();
+			currentLocationService.RaiseLocationChanged += CurrentLocationService_RaiseLocationChanged;
 		}
 
-		//private void CurrentLocationService_RaiseLocationChanged(LocationCoordinates location)
-		//{
-		//	Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(Map.VisibleRegion.Radius.Kilometers)));
-		//}
+		private void CurrentLocationService_RaiseLocationChanged(LocationCoordinates location)
+		{
+			Map.MoveToRegion(MapSpan.FromCenterAndRadius(new Position(location.Latitude, location.Longitude), Distance.FromKilometers(Map.VisibleRegion.Radius.Kilometers)));
+		}
 	}
 }

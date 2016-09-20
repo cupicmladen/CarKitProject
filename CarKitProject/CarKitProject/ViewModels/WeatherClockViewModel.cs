@@ -239,12 +239,12 @@ namespace CarKitProject.ViewModels
 
 		private void SetDateTime()
 		{
-			var _dateTime = DateTime.Now;
+			var dateTime = DateTime.Now;
 
-			Day = _dateTime.DayOfWeek.ToString();
-			Date = "" + _dateTime.Day + " " + _dateTime.ToString("MMMM"); ;
-			Hour = _dateTime.Hour.ToString();
-			Minutes = _dateTime.Minute.ToString();
+			Day = dateTime.DayOfWeek.ToString();
+			Date = "" + dateTime.Day + ", " + dateTime.ToString("MMM"); ;
+			Hour = dateTime.Hour.ToString();
+			Minutes = $"{dateTime.Minute:00}";
 		}
 
 		private WeatherService _weatherService;
