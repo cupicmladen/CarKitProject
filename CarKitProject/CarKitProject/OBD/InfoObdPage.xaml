@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="CarKitProject.OBD.InfoObdPage">
+  <Grid>
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+    <Grid VerticalOptions="Start" HorizontalOptions="Start" RowSpacing="5" Margin="10" ColumnSpacing="10">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition/>
+        <ColumnDefinition/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+      <Label Text="RPM:"/>
+      <Label Text="Speed:" Grid.Row="1"/>
+      <Label Text="Coolant:" Grid.Row="2"/>
+      <Label Text="EngineOilTemperature" Grid.Row="3"/>
+      <Label Text="CalculatedEngineLoad" Grid.Row="4"/>
+      <Label Text="FuelTankLevel" Grid.Row="5"/>
+      <Label Text="Maf:" Grid.Row="6"/>
+      <Label Text="Gear:" Grid.Row="7"/>
+
+      <Label Text="{Binding RpmCommand.Value}" Grid.Column="1"/>
+      <Label Text="{Binding SpeedCommand.Value}" Grid.Column="1" Grid.Row="1"/>
+      <Label Text="{Binding CoolantTemperatureCommand.Value}" Grid.Column="1" Grid.Row="2"/>
+      <Label Text="{Binding EngineOilTemperatureCommand.Value}" Grid.Column="1" Grid.Row="3"/>
+      <Label Text="{Binding CalculatedEngineLoadCommand.Value}" Grid.Column="1" Grid.Row="4"/>
+      <Label Text="{Binding FuelTankLevelCommand.Value}" Grid.Column="1" Grid.Row="5"/>
+      <Label Text="{Binding MafAirFlowRateCommand.Value}" Grid.Column="1" Grid.Row="6"/>
+      <Label Text="{Binding Gear.Value}" Grid.Column="1" Grid.Row="7"/>
+    </Grid>
+    <Label Text="{Binding CurrentConsumptionCommand.Value, StringFormat='{0:N}'}" Grid.Row="1" HorizontalOptions="Center" VerticalOptions="Center" FontSize="120" TextColor="Red"/>
+    <Grid Grid.Row="2">
+      <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+        <Button x:Name="Connect" Text="Con" Clicked="Connect_OnClicked" FontSize="10" WidthRequest="50"/>
+        <Button x:Name="Log" Text="Log" Clicked="Log_OnClicked" FontSize="10" WidthRequest="50"/>
+      </StackLayout>
+    </Grid>
+  </Grid>
+</ContentPage>
+
+<!--
+
+use in this order:
+1. ati
+2. atl0
+3. ath0
+4. ats0
+5. atsp6
+6. atcra 7e8
+7. 0100
+
+8.  atat2 (optional)
+
+-->

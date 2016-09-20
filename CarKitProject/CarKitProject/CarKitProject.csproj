@@ -45,13 +45,13 @@
     <Compile Include="Helpers\ImageLoader.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Interfaces\ICurrentLocationService.cs" />
+    <Compile Include="OBD\Commands\CalculatedCommand.cs" />
     <Compile Include="OBD\Commands\CalculatedEngineLoadCommand.cs" />
     <Compile Include="OBD\Commands\CoolantTemperatureCommand.cs" />
     <Compile Include="OBD\Commands\MafAirFlowRateCommand.cs" />
     <Compile Include="OBD\Commands\EngineOilTemperatureCommand.cs" />
     <Compile Include="OBD\Commands\RpmCommand.cs" />
     <Compile Include="OBD\Commands\FuelTankLevelCommand.cs" />
-    <Compile Include="OBD\Commands\EngineFuelRateCommand.cs" />
     <Compile Include="OBD\Commands\SpeedCommand.cs" />
     <Compile Include="OBD\IFileService.cs" />
     <Compile Include="MainPage.xaml.cs">
@@ -62,11 +62,8 @@
     <Compile Include="Models\WeatherModel.cs" />
     <Compile Include="OBD\IBtConnectionManager.cs" />
     <Compile Include="OBD\Commands\ObdCommand.cs" />
-    <Compile Include="OBD\PidsListPage.xaml.cs">
-      <DependentUpon>PidsListPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="OBD\TestObdPage.xaml.cs">
-      <DependentUpon>TestObdPage.xaml</DependentUpon>
+    <Compile Include="OBD\InfoObdPage.xaml.cs">
+      <DependentUpon>InfoObdPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\Annotations1.cs" />
@@ -79,7 +76,7 @@
     <Compile Include="UserControls\WeatherClockControl.xaml.cs">
       <DependentUpon>WeatherClockControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\PidsViewModel.cs" />
+    <Compile Include="ViewModels\ObdCommandsViewModel.cs" />
     <Compile Include="ViewModels\WeatherClockViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -145,13 +142,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="OBD\TestObdPage.xaml">
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="OBD\PidsListPage.xaml">
+    <EmbeddedResource Include="OBD\InfoObdPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

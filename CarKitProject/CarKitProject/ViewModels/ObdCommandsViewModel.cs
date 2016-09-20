@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
@@ -12,24 +13,24 @@ using Xamarin.Forms;
 
 namespace CarKitProject.ViewModels
 {
-	public class PidsViewModel : INotifyPropertyChanged
+	public class ObdCommandsViewModel : INotifyPropertyChanged
 	{
-		public PidsViewModel()
+		public ObdCommandsViewModel()
 		{
-			TempResponseList = string.Empty;
-
 			RpmCommand = new RpmCommand();
 			SpeedCommand = new SpeedCommand();
 			CoolantTemperatureCommand = new CoolantTemperatureCommand();
 			EngineOilTemperatureCommand = new EngineOilTemperatureCommand();
 			CalculatedEngineLoadCommand = new CalculatedEngineLoadCommand();
 			FuelTankLevelCommand = new FuelTankLevelCommand();
-			EngineFuelRateCommand = new EngineFuelRateCommand();
 			MafAirFlowRateCommand = new MafAirFlowRateCommand();
-
+			Gear = new CalculatedCommand();
+			CurrentConsumptionCommand = new CalculatedCommand();
 		}
 
-		public bool ConnectToObd()
+		#region Public Methods
+
+		public bool ConnectToObdAndInitialize()
 		{
 			_btManager = DependencyService.Get<IBtConnectionManager>();
 			_btManager.ConnectToObd();
@@ -37,21 +38,41 @@ namespace CarKitProject.ViewModels
 			if (_btManager == null || !_btManager.IsConnected)
 				return false;
 
+			var initCommands = new List<string> { "ati\r", "atl0\r", "ath0\r", "ats0\r", "atsp6\r", "atcra 7e8\r", "0100\r", "0100\r" };
+
+			var index = 0;
+			Device.StartTimer(TimeSpan.FromMilliseconds(500), () =>
+			{
+				_btManager.SendCommand(initCommands[index]);
+				index++;
+
+				if (index == initCommands.Count)
+					return false;
+
+				return true;
+			});
+
 			_btManager.DataReceived += BtDataReceived;
 			_btManager.StartReadingData();
 
+			LoadData();
+
 			return _btManager.IsConnected;
 		}
+
+		public void StopReadingData()
+		{
+			_cancellationTokenSource.Cancel();
+		}
+
+		#endregion
+
+		#region PrivateMethods
 
 		private void BtDataReceived(string command)
 		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
-				//TempResponseList += DateTime.Now.ToString("mm:ss.fff") + ": " + command + Environment.NewLine;
-				TempResponseList += command + Environment.NewLine;
-				
-				ResponsesTotalLineCounter++;
-
 				var commandsSplit = command.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < commandsSplit.Length; i++)
 				{
@@ -59,30 +80,21 @@ namespace CarKitProject.ViewModels
 
 					if (response.Count == 0)
 					{
-						InvalidResponses++;
 						continue;
 					}
-						
 
 					var obdCommand = FindCommand(response[0]);
 
 					if (obdCommand == null)
 					{
-						InvalidResponses++;
 						continue;
 					}
 
 					response.RemoveAt(0);
 					obdCommand.CalculateValue(response);
 
-					ValidResponsesWithSplitCounter++;
-
-					if (_calculateGear)
-					{
-						//CalculateGear();
-						CalculateCurrentConsumption();
-					}
-						
+					CalculateGear();
+					CalculateCurrentConsumption();
 				}
 			});
 		}
@@ -91,7 +103,9 @@ namespace CarKitProject.ViewModels
 		{
 			if (SpeedCommand.GetSpeed != 0 && MafAirFlowRateCommand.GetMafAirFlowRate != 0)
 			{
-				CalculatedCurrentConsumptionCommand = "" + SpeedCommand.GetSpeed/(MafAirFlowRateCommand.GetMafAirFlowRate/4.08333333);
+				var kilometersPerLiter = SpeedCommand.GetSpeed / (MafAirFlowRateCommand.GetMafAirFlowRate / 4.08333333);
+				var litersPer100Kilometers = 100d / kilometersPerLiter;
+				CurrentConsumptionCommand.Value = "" + litersPer100Kilometers;
 			}
 		}
 
@@ -115,26 +129,16 @@ namespace CarKitProject.ViewModels
 			if (FuelTankLevelCommand.CommandShort == commandShort)
 				return FuelTankLevelCommand;
 
-			if (EngineFuelRateCommand.CommandShort == commandShort)
-				return EngineFuelRateCommand;
-
 			if (MafAirFlowRateCommand.CommandShort == commandShort)
 				return MafAirFlowRateCommand;
 
 			return null;
 		}
 
-		public void SendCommand(string command)
-		{
-			_btManager.SendCommand(command);
-		}
-
-		public void LoadData()
+		private void LoadData()
 		{
 			if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
 				_cancellationTokenSource = new CancellationTokenSource();
-
-			StartTime = DateTime.Now;
 
 			Task.Factory.StartNew((o) =>
 			{
@@ -142,12 +146,12 @@ namespace CarKitProject.ViewModels
 
 				while (!_cancellationTokenSource.IsCancellationRequested)
 				{
-					if(frequency == 0)
-						TestSendCommand(RpmCommand);
-					else if(frequency == 1)
-						TestSendCommand(SpeedCommand);
-					else if(frequency == 2)
-						TestSendCommand(MafAirFlowRateCommand);
+					if (frequency == 0)
+						_btManager.SendCommand(RpmCommand.Command + " 1\r");
+					else if (frequency == 1)
+						_btManager.SendCommand(SpeedCommand.Command + " 1\r");
+					else if (frequency == 2)
+						_btManager.SendCommand(MafAirFlowRateCommand.Command + " 1\r");
 
 					if (frequency == 2)
 						frequency = -1;
@@ -165,103 +169,88 @@ namespace CarKitProject.ViewModels
 					//	CommandsSentCounter++;
 					//	OuterCounter++;
 
-						//	if (frequency % 1000 == 0)
-						//	{
-						//		_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
-						//		CommandsSentCounter++;
-						//		InternalCounter++;
-						//		_btManager.SendCommand(EngineOilTemperatureCommand.Command + " 1\r");
-						//		CommandsSentCounter++;
-						//		InternalCounter++;
-						//	}
+					//	if (frequency % 1000 == 0)
+					//	{
+					//		_btManager.SendCommand(CoolantTemperatureCommand.Command + " 1\r");
+					//		CommandsSentCounter++;
+					//		InternalCounter++;
+					//		_btManager.SendCommand(EngineOilTemperatureCommand.Command + " 1\r");
+					//		CommandsSentCounter++;
+					//		InternalCounter++;
+					//	}
 
-						//	frequency++;
+					//	frequency++;
 
-						//	if (frequency == int.MaxValue)
-						//		frequency = 0;
-						//}
-						//else
-						//{
-						//	_btManager.SendCommand(RpmCommand.FormattedCommand);
-						//	CommandsSentCounter++;
-						//	OuterCounter++;
-						//	_btManager.SendCommand(SpeedCommand.FormattedCommand);
-						//	CommandsSentCounter++;
-						//	OuterCounter++;
+					//	if (frequency == int.MaxValue)
+					//		frequency = 0;
+					//}
+					//else
+					//{
+					//	_btManager.SendCommand(RpmCommand.FormattedCommand);
+					//	CommandsSentCounter++;
+					//	OuterCounter++;
+					//	_btManager.SendCommand(SpeedCommand.FormattedCommand);
+					//	CommandsSentCounter++;
+					//	OuterCounter++;
 
-						//	if (frequency % 1000 == 0)
-						//	{
-						//		_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
-						//		CommandsSentCounter++;
-						//		InternalCounter++;
-						//		_btManager.SendCommand(EngineOilTemperatureCommand.FormattedCommand);
-						//		CommandsSentCounter++;
-						//		InternalCounter++;
-						//	}
+					//	if (frequency % 1000 == 0)
+					//	{
+					//		_btManager.SendCommand(CoolantTemperatureCommand.FormattedCommand);
+					//		CommandsSentCounter++;
+					//		InternalCounter++;
+					//		_btManager.SendCommand(EngineOilTemperatureCommand.FormattedCommand);
+					//		CommandsSentCounter++;
+					//		InternalCounter++;
+					//	}
 
-						//	frequency++;
+					//	frequency++;
 
-						//	if (frequency == int.MaxValue)
-						//		frequency = 0;
-						//}
+					//	if (frequency == int.MaxValue)
+					//		frequency = 0;
+					//}
 
 				}
 			}, TaskCreationOptions.LongRunning, _cancellationTokenSource.Token);
 		}
 
-		private void TestSendCommand(ObdCommand command)
-		{
-			TempResponseList += ">" + command.Command + Environment.NewLine;
-			_btManager.SendCommand(command.Command + " 1\r");
-			//CommandsSentCounter++;
-		}
-
-		public void StopReadingData()
-		{
-			_cancellationTokenSource.Cancel();
-		}
-
-		public void UseOneResponse(bool value)
-		{
-			UseFirstResponse = value;
-		}
-
 		private void CalculateGear()
 		{
-			if(RpmCommand.GetRpm == 0)
+			if (RpmCommand.GetRpm == 0)
 				return;
 
 			var result = (decimal)SpeedCommand.GetSpeed / RpmCommand.GetRpm;
 
 			if (result > 0 && result <= 0.01m)
 			{
-				Gear = 1;
+				Gear.Value = "1";
 			}
 			else if (result >= 0.01m && result <= 0.02m)
 			{
-				Gear = 2;
+				Gear.Value = "2";
 			}
 			else if (result >= 0.02m && result <= 0.03m)
 			{
-				Gear = 3;
+				Gear.Value = "3";
 			}
 			else if (result >= 0.03m && result <= 0.04m)
 			{
-				Gear = 4;
+				Gear.Value = "4";
 			}
 			else if (result >= 0.04m && result <= 0.05m)
 			{
-				Gear = 5;
+				Gear.Value = "5";
 			}
 			else if (result >= 0.05m && result <= 0.06m)
 			{
-				Gear = 6;
+				Gear.Value = "6";
 			}
 			else
 			{
-				Gear = 0;
+				Gear.Value = "0";
 			}
 		}
+
+		#endregion
 
 		#region ObdCommands
 
@@ -301,49 +290,25 @@ namespace CarKitProject.ViewModels
 			set { _fuelTankLevelCommand = value; }
 		}
 
-		public EngineFuelRateCommand EngineFuelRateCommand
-		{
-			get { return _engineFuelRateCommand; }
-			set { _engineFuelRateCommand = value; }
-		}
-
 		public MafAirFlowRateCommand MafAirFlowRateCommand
 		{
 			get { return _mafAirFlowRateCommand; }
 			set { _mafAirFlowRateCommand = value; }
 		}
 
-		#endregion
-
-		public string TempResponseList
-		{
-			get { return _tempResponseList; }
-			set
-			{
-				_tempResponseList = value;
-				OnPropertyChanged("TempResponseList");
-			}
-		}
-
-		public int Gear
+		public CalculatedCommand Gear
 		{
 			get { return _gear; }
-			set
-			{
-				_gear = value;
-				OnPropertyChanged("Gear");
-			}
+			set { _gear = value; }
 		}
 
-		public string CalculatedCurrentConsumptionCommand
+		public CalculatedCommand CurrentConsumptionCommand
 		{
-			get { return _calculatedCurrentConsumptionCommand; }
-			set
-			{
-				_calculatedCurrentConsumptionCommand = value;
-				OnPropertyChanged("CalculatedCurrentConsumptionCommand");
-			}
+			get { return _currentConsumptionCommand; }
+			set { _currentConsumptionCommand = value; }
 		}
+
+		#endregion
 
 		#region Handlers
 
@@ -366,24 +331,8 @@ namespace CarKitProject.ViewModels
 		private EngineOilTemperatureCommand _engineOilTemperatureCommand;
 		private CalculatedEngineLoadCommand _calculatedEngineLoadCommand;
 		private FuelTankLevelCommand _fuelTankLevelCommand;
-		private EngineFuelRateCommand _engineFuelRateCommand;
 		private MafAirFlowRateCommand _mafAirFlowRateCommand;
-		private string _calculatedCurrentConsumptionCommand;
-		private int _gear;
-
-		private string _tempResponseList;
-		public bool UseFirstResponse = false;
-		public bool UseAtat2Command = false;
-
-		private bool _calculateGear = true;
-
-		public int CommandsSentCounter = 0;
-		public int ResponsesTotalLineCounter = 0;
-		public int ValidResponsesWithSplitCounter = 0;
-		public int InvalidResponses = 0;
-		public int OuterCounter = 0;
-		public int InternalCounter = 0;
-
-		public DateTime StartTime;
+		private CalculatedCommand _currentConsumptionCommand;
+		private CalculatedCommand _gear;
 	}
 }

@@ -13,10 +13,8 @@ namespace CarKitProject
 		{
 			InitializeComponent();
 
-			//MainPage = new MainPage();
-			var navigationPage = new NavigationPage(new TestObdPage());
+			var navigationPage = new NavigationPage(new InfoObdPage());
 			MainPage = navigationPage;
-			//MainPage = new TestObdPage();
 		}
 
 		protected override void OnStart()
