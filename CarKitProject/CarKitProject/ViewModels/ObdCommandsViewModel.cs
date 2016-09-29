@@ -4,10 +4,10 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using CarKitProject.Annotations;
 using CarKitProject.Extensions;
 using CarKitProject.OBD;
 using CarKitProject.OBD.Commands;
+using CarKitProject.Properties;
 using Xamarin.Forms;
 
 namespace CarKitProject.ViewModels

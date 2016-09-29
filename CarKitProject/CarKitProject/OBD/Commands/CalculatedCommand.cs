@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using CarKitProject.Annotations;
+using CarKitProject.Properties;
 
 namespace CarKitProject.OBD.Commands
 {
