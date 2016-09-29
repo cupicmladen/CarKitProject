@@ -15,9 +15,36 @@ namespace CarKitProject.OBD.Commands
 
 		public int GetFuelTankLevel => int.Parse(Value);
 
+		public double RemainingFuelInLitres
+		{
+			get { return _remainingFuelInLitres; }
+			set
+			{
+				_remainingFuelInLitres = value;
+				OnPropertyChanged("RemainingFuelInLitres");
+			}
+		}
+
+		public int Range
+		{
+			get { return _range; }
+			set
+			{
+				_range = value;
+				OnPropertyChanged("Range");
+			}
+		}
+
 		public override void CalculateValue(IList<string> hexValue)
 		{
-			Value = "" + (0.392*Convert.ToInt64(hexValue[0], 16));
+			var fuelLevel = (0.392 * Convert.ToInt64(hexValue[0], 16));
+			RemainingFuelInLitres = (fuelLevel/100)*FuelTankCapacity;
+			Value = "" + fuelLevel;
 		}
+
+		private const int FuelTankCapacity = 70;
+		private const double AveregeConsumption = 70; // TODO: calculate this later;
+		private double _remainingFuelInLitres;
+		private int _range;
 	}
 }

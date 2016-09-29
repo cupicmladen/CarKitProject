@@ -37,24 +37,25 @@ namespace CarKitProject.ViewModels
 			if (_btManager == null || !_btManager.IsConnected)
 				return false;
 
-			var initCommands = new List<string> { "ati\r", "atl0\r", "ath0\r", "ats0\r", "atsp6\r", "atcra 7e8\r", "0100\r", "0100\r" };
+			//var initCommands = new List<string> { "ati\r", "atl0\r", "ath0\r", "ats0\r", "atsp6\r", "atcra 7e8\r", "0100\r", "0100\r", "atma\r"};
 
-			var index = 0;
-			Device.StartTimer(TimeSpan.FromMilliseconds(500), () =>
-			{
-				_btManager.SendCommand(initCommands[index]);
-				index++;
+			//var index = 0;
+			//Device.StartTimer(TimeSpan.FromMilliseconds(500), () =>
+			//{
+			//	_btManager.SendCommand(initCommands[index]);
+			//	index++;
 
-				if (index == initCommands.Count)
-					return false;
+			//	if (index == initCommands.Count)
+			//		return false;
 
-				return true;
-			});
+			//	return true;
+			//});
 
 			_btManager.DataReceived += BtDataReceived;
 			_btManager.StartReadingData();
 
-			LoadData();
+			//LoadData();
+			Log += "Connected: " + _btManager.IsConnected + Environment.NewLine;
 
 			return _btManager.IsConnected;
 		}
@@ -62,6 +63,11 @@ namespace CarKitProject.ViewModels
 		public void StopReadingData()
 		{
 			_cancellationTokenSource.Cancel();
+		}
+
+		public void SendCommand(string command)
+		{
+			_btManager.SendCommand(command);
 		}
 
 		#endregion
@@ -72,6 +78,8 @@ namespace CarKitProject.ViewModels
 		{
 			Device.BeginInvokeOnMainThread(() =>
 			{
+				Log += command + Environment.NewLine;
+				//TotalNumberOfCommands++;
 				var commandsSplit = command.Split(new[] { '>' }, StringSplitOptions.RemoveEmptyEntries);
 				for (int i = 0; i < commandsSplit.Length; i++)
 				{
@@ -91,21 +99,30 @@ namespace CarKitProject.ViewModels
 
 					response.RemoveAt(0);
 					obdCommand.CalculateValue(response);
-
-					CalculateGear();
-					CalculateCurrentConsumption();
+					//CalculateGear();
+					//CalculateCurrentConsumption1();
 				}
 			});
 		}
 
-		private void CalculateCurrentConsumption()
+		private void CalculateCurrentConsumption1()
 		{
 			if (SpeedCommand.GetSpeed != 0 && MafAirFlowRateCommand.GetMafAirFlowRate != 0)
 			{
 				var kilometersPerLiter = SpeedCommand.GetSpeed / (MafAirFlowRateCommand.GetMafAirFlowRate / 4.08333333);
 				var litersPer100Kilometers = 100d / kilometersPerLiter;
-				CurrentConsumptionCommand.Value = "" + litersPer100Kilometers;
+				var value1 = $"{litersPer100Kilometers:0.00}";
+				var value2 = $"{CalculateCurrentConsumption2():0.00}";
+				Consumption += "Speed: " + SpeedCommand.Value + " RPM: " + RpmCommand.Value + " Consumption1: " + value1 + " Consumption2: " + value2 + Environment.NewLine;
+				CurrentConsumptionCommand.Value = value2;
 			}
+		}
+
+		private double CalculateCurrentConsumption2()
+		{
+			var mpg = (SpeedCommand.GetSpeed*7.718)/MafAirFlowRateCommand.GetMafAirFlowRate;
+			var litersPer100Kilometers = (100*3.785411784)/(1.609344*mpg);
+			return litersPer100Kilometers;
 		}
 
 		private ObdCommand FindCommand(string commandShort)
@@ -272,6 +289,16 @@ namespace CarKitProject.ViewModels
 			set { _currentConsumptionCommand = value; }
 		}
 
+		public int TotalNumberOfCommands
+		{
+			get { return _totalNumberOfCommands; }
+			set
+			{
+				_totalNumberOfCommands = value;
+				OnPropertyChanged("TotalNumberOfCommands");
+			}
+		}
+
 		#endregion
 
 		#region Handlers
@@ -298,5 +325,9 @@ namespace CarKitProject.ViewModels
 		private MafAirFlowRateCommand _mafAirFlowRateCommand;
 		private CalculatedCommand _currentConsumptionCommand;
 		private CalculatedCommand _gear;
+
+		public string Consumption = "";
+		private int _totalNumberOfCommands = 0;
+		public string Log = "";
 	}
 }
