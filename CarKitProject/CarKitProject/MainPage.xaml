@@ -13,7 +13,7 @@
     </Grid.RowDefinitions>
 
     <Image x:Name="BackgroundImg" Grid.RowSpan="2"/>
-
+    <maps:Map x:Name="Map" Grid.Row="1" MapType="Hybrid" HasZoomEnabled="True" IsShowingUser="True" Margin="0,-30,0,0"/>
     <Grid>
       <Grid.ColumnDefinitions>
         <ColumnDefinition/>
@@ -30,7 +30,7 @@
       </Grid>
       <userControls:WeatherClockControl Grid.Column="1"/>
     </Grid>
-    <maps:Map x:Name="Map" Grid.Row="1" MapType="Hybrid" HasZoomEnabled="True" IsShowingUser="True"/>
+    
   </Grid>
   
 </ContentPage>
