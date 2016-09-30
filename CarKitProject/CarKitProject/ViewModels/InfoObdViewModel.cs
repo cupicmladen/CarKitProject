@@ -12,19 +12,19 @@ using Xamarin.Forms;
 
 namespace CarKitProject.ViewModels
 {
-	public class ObdCommandsViewModel : INotifyPropertyChanged
+	public class InfoObdViewModel : INotifyPropertyChanged
 	{
-		public ObdCommandsViewModel()
+		public InfoObdViewModel()
 		{
-			RpmCommand = new RpmCommand();
-			SpeedCommand = new SpeedCommand();
-			CoolantTemperatureCommand = new CoolantTemperatureCommand();
-			EngineOilTemperatureCommand = new EngineOilTemperatureCommand();
-			CalculatedEngineLoadCommand = new CalculatedEngineLoadCommand();
-			FuelTankLevelCommand = new FuelTankLevelCommand();
-			MafAirFlowRateCommand = new MafAirFlowRateCommand();
-			Gear = new CalculatedCommand();
-			CurrentConsumptionCommand = new CalculatedCommand();
+			RpmCommand = new RpmViewModel();
+			SpeedCommand = new SpeedViewModel();
+			CoolantTemperatureCommand = new CoolantTemperatureViewModel();
+			EngineOilTemperatureCommand = new EngineOilTemperatureViewModel();
+			CalculatedEngineLoadCommand = new CalculatedEngineLoadViewModel();
+			FuelTankLevelCommand = new FuelTankLevelViewModel();
+			MafAirFlowRateCommand = new MafAirFlowRateViewModel();
+			GearCommand = new CalculatedViewModel();
+			CurrentConsumptionCommand = new CalculatedViewModel();
 		}
 
 		#region Public Methods
@@ -108,7 +108,7 @@ namespace CarKitProject.ViewModels
 			}
 		}
 
-		private ObdCommand FindCommand(string commandShort)
+		private ObdViewModel FindCommand(string commandShort)
 		{
 			if (RpmCommand.CommandShort == commandShort)
 				return RpmCommand;
@@ -186,31 +186,31 @@ namespace CarKitProject.ViewModels
 
 			if (result > 0 && result <= 0.01m)
 			{
-				Gear.Value = "1";
+				GearCommand.Value = "1";
 			}
 			else if (result >= 0.01m && result <= 0.02m)
 			{
-				Gear.Value = "2";
+				GearCommand.Value = "2";
 			}
 			else if (result >= 0.02m && result <= 0.03m)
 			{
-				Gear.Value = "3";
+				GearCommand.Value = "3";
 			}
 			else if (result >= 0.03m && result <= 0.04m)
 			{
-				Gear.Value = "4";
+				GearCommand.Value = "4";
 			}
 			else if (result >= 0.04m && result <= 0.05m)
 			{
-				Gear.Value = "5";
+				GearCommand.Value = "5";
 			}
 			else if (result >= 0.05m && result <= 0.06m)
 			{
-				Gear.Value = "6";
+				GearCommand.Value = "6";
 			}
 			else
 			{
-				Gear.Value = "0";
+				GearCommand.Value = "0";
 			}
 		}
 
@@ -218,55 +218,55 @@ namespace CarKitProject.ViewModels
 
 		#region ObdCommands
 
-		public RpmCommand RpmCommand
+		public RpmViewModel RpmCommand
 		{
 			get { return _rpmCommand; }
 			set { _rpmCommand = value; }
 		}
 
-		public SpeedCommand SpeedCommand
+		public SpeedViewModel SpeedCommand
 		{
 			get { return _speedCommand; }
 			set { _speedCommand = value; }
 		}
 
-		public CoolantTemperatureCommand CoolantTemperatureCommand
+		public CoolantTemperatureViewModel CoolantTemperatureCommand
 		{
 			get { return _coolantCoolantTemperatureCommand; }
 			set { _coolantCoolantTemperatureCommand = value; }
 		}
 
-		public EngineOilTemperatureCommand EngineOilTemperatureCommand
+		public EngineOilTemperatureViewModel EngineOilTemperatureCommand
 		{
 			get { return _engineOilTemperatureCommand; }
 			set { _engineOilTemperatureCommand = value; }
 		}
 
-		public CalculatedEngineLoadCommand CalculatedEngineLoadCommand
+		public CalculatedEngineLoadViewModel CalculatedEngineLoadCommand
 		{
 			get { return _calculatedEngineLoadCommand; }
 			set { _calculatedEngineLoadCommand = value; }
 		}
 
-		public FuelTankLevelCommand FuelTankLevelCommand
+		public FuelTankLevelViewModel FuelTankLevelCommand
 		{
 			get { return _fuelTankLevelCommand; }
 			set { _fuelTankLevelCommand = value; }
 		}
 
-		public MafAirFlowRateCommand MafAirFlowRateCommand
+		public MafAirFlowRateViewModel MafAirFlowRateCommand
 		{
 			get { return _mafAirFlowRateCommand; }
 			set { _mafAirFlowRateCommand = value; }
 		}
 
-		public CalculatedCommand Gear
+		public CalculatedViewModel GearCommand
 		{
-			get { return _gear; }
-			set { _gear = value; }
+			get { return _gearCommand; }
+			set { _gearCommand = value; }
 		}
 
-		public CalculatedCommand CurrentConsumptionCommand
+		public CalculatedViewModel CurrentConsumptionCommand
 		{
 			get { return _currentConsumptionCommand; }
 			set { _currentConsumptionCommand = value; }
@@ -289,14 +289,14 @@ namespace CarKitProject.ViewModels
 		private CancellationTokenSource _cancellationTokenSource;
 		private IBtConnectionManager _btManager;
 
-		private RpmCommand _rpmCommand;
-		private SpeedCommand _speedCommand;
-		private CoolantTemperatureCommand _coolantCoolantTemperatureCommand;
-		private EngineOilTemperatureCommand _engineOilTemperatureCommand;
-		private CalculatedEngineLoadCommand _calculatedEngineLoadCommand;
-		private FuelTankLevelCommand _fuelTankLevelCommand;
-		private MafAirFlowRateCommand _mafAirFlowRateCommand;
-		private CalculatedCommand _currentConsumptionCommand;
-		private CalculatedCommand _gear;
+		private RpmViewModel _rpmCommand;
+		private SpeedViewModel _speedCommand;
+		private CoolantTemperatureViewModel _coolantCoolantTemperatureCommand;
+		private EngineOilTemperatureViewModel _engineOilTemperatureCommand;
+		private CalculatedEngineLoadViewModel _calculatedEngineLoadCommand;
+		private FuelTankLevelViewModel _fuelTankLevelCommand;
+		private MafAirFlowRateViewModel _mafAirFlowRateCommand;
+		private CalculatedViewModel _currentConsumptionCommand;
+		private CalculatedViewModel _gearCommand;
 	}
 }

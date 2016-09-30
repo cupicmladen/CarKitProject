@@ -10,7 +10,7 @@ namespace CarKitProject.OBD
 		{
 			InitializeComponent();
 			NavigationPage.SetHasNavigationBar(this, false);
-			_viewModel = new ObdCommandsViewModel();
+			_viewModel = new InfoObdViewModel();
 			BindingContext = _viewModel;
 		}
 
@@ -45,6 +45,6 @@ namespace CarKitProject.OBD
 			_viewModel.ConnectToObdAndInitialize();
 		}
 
-		private ObdCommandsViewModel _viewModel;
+		private InfoObdViewModel _viewModel;
 	}
 }

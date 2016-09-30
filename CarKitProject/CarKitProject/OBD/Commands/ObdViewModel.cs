@@ -6,7 +6,7 @@ using CarKitProject.Properties;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class ObdCommand : INotifyPropertyChanged
+	public class ObdViewModel : INotifyPropertyChanged
 	{
 		public string Command
 		{

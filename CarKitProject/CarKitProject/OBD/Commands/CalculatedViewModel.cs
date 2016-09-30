@@ -4,9 +4,9 @@ using CarKitProject.Properties;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class CalculatedCommand : INotifyPropertyChanged
+	public class CalculatedViewModel : INotifyPropertyChanged
 	{
-		public CalculatedCommand()
+		public CalculatedViewModel()
 		{
 			Value = "0";
 		}

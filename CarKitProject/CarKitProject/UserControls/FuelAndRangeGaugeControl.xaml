@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:CarKitProject.Converters;assembly=CarKitProject"
+             x:Class="CarKitProject.UserControls.FuelAndRangeGaugeControl">
+  <ContentView.Resources>
+    <ResourceDictionary>
+      <converters:FuelTankToWidthConverter x:Key="FuelTankToWidthConverter"/>
+      <converters:FuelTankToMarginConverter x:Key="FuelTankToMarginConverter"/>
+    </ResourceDictionary>
+  </ContentView.Resources>
+  <Grid RowSpacing="0">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+
+    <StackLayout Orientation="Horizontal" HorizontalOptions="Start">
+      <Image x:Name="CarImage"/>
+      <Label HorizontalTextAlignment="Center" VerticalTextAlignment="Center" Text="{Binding FuelRange}" TextColor="White"/>
+    </StackLayout>
+
+    <Grid Grid.Row="1" ColumnSpacing="0" RowSpacing="0" HeightRequest="35" VerticalOptions="Start">
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="{Binding Value, Converter={StaticResource FuelTankToWidthConverter}, ConverterParameter='Remaining'}"/>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="{Binding Value, Converter={StaticResource FuelTankToWidthConverter}}"/>
+      </Grid.ColumnDefinitions>
+      <BoxView Color="#0e50f7" Margin="0,4,0,4"/>
+      <BoxView Color="Red" WidthRequest="2" Grid.Column="1"/>
+      <BoxView Color="#7dedd4c2" Grid.Column="2" Margin="0,4,0,4"/>
+
+      <Label Text="{Binding Value, StringFormat='{0}%'}" TextColor="White" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="12" VerticalOptions="Start" HorizontalOptions="Start" Margin="{Binding Value, Converter={StaticResource FuelTankToMarginConverter}}"/>
+
+    </Grid>
+  </Grid>
+</ContentView>

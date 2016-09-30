@@ -38,6 +38,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\FuelTankToMarginConverter.cs" />
+    <Compile Include="Converters\FuelTankToWidthConverter.cs" />
     <Compile Include="Enums\WeatherCondition.cs" />
     <Compile Include="Extensions\ContentPageBindingExtension.cs" />
     <Compile Include="Extensions\ImageResourceExtension.cs" />
@@ -45,14 +47,14 @@
     <Compile Include="Helpers\ImageLoader.cs" />
     <Compile Include="Helpers\Utils.cs" />
     <Compile Include="Interfaces\ICurrentLocationService.cs" />
-    <Compile Include="OBD\Commands\CalculatedCommand.cs" />
-    <Compile Include="OBD\Commands\CalculatedEngineLoadCommand.cs" />
-    <Compile Include="OBD\Commands\CoolantTemperatureCommand.cs" />
-    <Compile Include="OBD\Commands\MafAirFlowRateCommand.cs" />
-    <Compile Include="OBD\Commands\EngineOilTemperatureCommand.cs" />
-    <Compile Include="OBD\Commands\RpmCommand.cs" />
-    <Compile Include="OBD\Commands\FuelTankLevelCommand.cs" />
-    <Compile Include="OBD\Commands\SpeedCommand.cs" />
+    <Compile Include="OBD\Commands\CalculatedViewModel.cs" />
+    <Compile Include="OBD\Commands\CalculatedEngineLoadViewModel.cs" />
+    <Compile Include="OBD\Commands\CoolantTemperatureViewModel.cs" />
+    <Compile Include="OBD\Commands\MafAirFlowRateViewModel.cs" />
+    <Compile Include="OBD\Commands\EngineOilTemperatureViewModel.cs" />
+    <Compile Include="OBD\Commands\RpmViewModel.cs" />
+    <Compile Include="OBD\Commands\FuelTankLevelViewModel.cs" />
+    <Compile Include="OBD\Commands\SpeedViewModel.cs" />
     <Compile Include="OBD\IFileService.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -61,13 +63,16 @@
     <Compile Include="Models\Weather.cs" />
     <Compile Include="Models\WeatherModel.cs" />
     <Compile Include="OBD\IBtConnectionManager.cs" />
-    <Compile Include="OBD\Commands\ObdCommand.cs" />
+    <Compile Include="OBD\Commands\ObdViewModel.cs" />
     <Compile Include="OBD\InfoObdPage.xaml.cs">
       <DependentUpon>InfoObdPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\WeatherService.cs" />
+    <Compile Include="UserControls\FuelAndRangeGaugeControl.xaml.cs">
+      <DependentUpon>FuelAndRangeGaugeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControls\IndicatorControl.xaml.cs">
       <DependentUpon>IndicatorControl.xaml</DependentUpon>
     </Compile>
@@ -75,7 +80,7 @@
     <Compile Include="UserControls\WeatherClockControl.xaml.cs">
       <DependentUpon>WeatherClockControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModels\ObdCommandsViewModel.cs" />
+    <Compile Include="ViewModels\InfoObdViewModel.cs" />
     <Compile Include="ViewModels\WeatherClockViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -132,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\IndicatorBackground.png" />
+    <EmbeddedResource Include="Resources\opel_insignia-icon.png" />
     <Content Include="Resources\resources.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +148,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="OBD\InfoObdPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="UserControls\FuelAndRangeGaugeControl.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
     </EmbeddedResource>

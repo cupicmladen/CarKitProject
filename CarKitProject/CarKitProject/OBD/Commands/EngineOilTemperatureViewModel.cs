@@ -6,19 +6,19 @@ using System.Threading.Tasks;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class CalculatedEngineLoadCommand : ObdCommand
+	public class EngineOilTemperatureViewModel : ObdViewModel
 	{
-		public CalculatedEngineLoadCommand()
+		public EngineOilTemperatureViewModel()
 		{
-			Command = "0104";
-			CommandShort = "04";
+			Command = "015C";
+			CommandShort = "5C";
 			Value = "0";
-			Unit = "%";
+			Unit = "C";
 		}
 
 		public override void CalculateValue(IList<string> hexValue)
 		{
-			Value = "" + Convert.ToInt64(hexValue[0], 16)/2.55;
+			Value = "" + (Convert.ToInt64(hexValue[0], 16) - 40);
 		}
 	}
 }

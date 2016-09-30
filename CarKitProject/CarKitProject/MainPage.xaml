@@ -25,11 +25,8 @@
           <RowDefinition/>
           <RowDefinition/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition/>
-          <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <userControls:IndicatorControl/>
+        <!--<userControls:IndicatorControl/>-->
+        <userControls:FuelAndRangeGaugeControl VerticalOptions="Start" BindingContext="{Binding FuelTankLevelCommand}"/>
       </Grid>
       <userControls:WeatherClockControl Grid.Column="1"/>
     </Grid>

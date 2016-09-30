@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CarKitProject.OBD;
+using CarKitProject.ViewModels;
 using Xamarin.Forms;
 
 namespace CarKitProject
@@ -13,9 +14,14 @@ namespace CarKitProject
 		{
 			InitializeComponent();
 
-			MainPage = new InfoObdPage();
+			//MainPage = new InfoObdPage();
 
-			//MainPage = new MainPage();
+			var infoOdbViewModel = new InfoObdViewModel();
+			infoOdbViewModel.FuelTankLevelCommand.Value = "" + 48;
+			infoOdbViewModel.FuelTankLevelCommand.Range = 271;
+			infoOdbViewModel.FuelTankLevelCommand.RemainingFuelInLitres = 24;
+
+			MainPage = new MainPage() { BindingContext = infoOdbViewModel };
 		}
 
 		protected override void OnStart()

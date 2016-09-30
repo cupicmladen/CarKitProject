@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class CoolantTemperatureCommand : ObdCommand
+	public class CoolantTemperatureViewModel : ObdViewModel
 	{
-		public CoolantTemperatureCommand()
+		public CoolantTemperatureViewModel()
 		{
 			Command = "0105";
 			CommandShort = "05";

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class MafAirFlowRateCommand : ObdCommand
+	public class MafAirFlowRateViewModel : ObdViewModel
 	{
-		public MafAirFlowRateCommand()
+		public MafAirFlowRateViewModel()
 		{
 			Command = "0110";
 			CommandShort = "10";

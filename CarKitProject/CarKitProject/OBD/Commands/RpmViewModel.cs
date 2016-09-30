@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class RpmCommand : ObdCommand
+	public class RpmViewModel : ObdViewModel
 	{
-		public RpmCommand()
+		public RpmViewModel()
 		{
 			Command = "010C";
 			CommandShort = "0C";

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class FuelTankLevelCommand : ObdCommand
+	public class FuelTankLevelViewModel : ObdViewModel
 	{
-		public FuelTankLevelCommand()
+		public FuelTankLevelViewModel()
 		{
 			Command = "012F";
 			CommandShort = "2F";
@@ -14,6 +14,7 @@ namespace CarKitProject.OBD.Commands
 		}
 
 		public int GetFuelTankLevel => int.Parse(Value);
+		public string FuelRange => RemainingFuelInLitres + " lit / " + Range + " km";
 
 		public double RemainingFuelInLitres
 		{
@@ -22,6 +23,7 @@ namespace CarKitProject.OBD.Commands
 			{
 				_remainingFuelInLitres = value;
 				OnPropertyChanged("RemainingFuelInLitres");
+				OnPropertyChanged("FuelRange");
 			}
 		}
 
@@ -32,6 +34,7 @@ namespace CarKitProject.OBD.Commands
 			{
 				_range = value;
 				OnPropertyChanged("Range");
+				OnPropertyChanged("FuelRange");
 			}
 		}
 

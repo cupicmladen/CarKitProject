@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CarKitProject.OBD.Commands
 {
-	public class SpeedCommand : ObdCommand
+	public class SpeedViewModel : ObdViewModel
 	{
-		public SpeedCommand()
+		public SpeedViewModel()
 		{
 			Command = "010D";
 			CommandShort = "0D";
